@@ -236,7 +236,7 @@ function renderExam() {
 
   // Hint toggle button (all modes)
   const hintBtnLabel = isHintShown ? 'Ẩn gợi ý' : '💡 Gợi ý';
-  const hintBtn = `<button class="btn btn--ghost" onclick="toggleHint()" style="margin-left:8px;">${hintBtnLabel}</button>`;
+  const hintBtn = state.mode !== 'practice' ? `<button class="btn btn--ghost" onclick="toggleHint()" style="margin-left:8px;">${hintBtnLabel}</button>` : '';
 
   app.innerHTML = `
     ${renderNavbar()}
@@ -733,7 +733,7 @@ function updateExamPartial() {
       practiceBtn = `<button class="btn btn--success" onclick="revealAnswer()" ${selectedAnswers.length === 0 ? 'disabled' : ''}>Kiểm tra đáp án</button>`;
     }
     const hintBtnLabel = isHintShown ? 'Ẩn gợi ý' : '💡 Gợi ý';
-    const hintBtn = `<button class="btn btn--ghost" onclick="toggleHint()" style="margin-left:8px;">${hintBtnLabel}</button>`;
+    const hintBtn = state.mode !== 'practice' ? `<button class="btn btn--ghost" onclick="toggleHint()" style="margin-left:8px;">${hintBtnLabel}</button>` : '';
     navLeft.innerHTML = `<button class="btn btn--ghost" onclick="prevQuestion()" ${state.currentIndex === 0 ? 'disabled' : ''}>← Trước</button>${practiceBtn}${hintBtn}`;
   }
 
