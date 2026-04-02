@@ -1,19 +1,26 @@
 // ============================================
 // SALESFORCE EXAM PRACTICE - MAIN APP
 // ============================================
+import { onAuthChange, loginWithGoogle, logout, getCurrentUser, getUserProfile, saveUserProfile, saveScore, getAllLeaderboard } from './firebase.js';
 
 let state = {
-  screen: 'home',       // home | mode | exam | results
+  screen: 'home',       // home | login | mode | exam | results | leaderboard
   lang: 'vi',           // vi | en
   certData: null,       // loaded JSON
   certId: 'pd1',
-  mode: null,            // demo | full
+  mode: null,            // demo | full | practice
   questions: [],         // current exam questions
   currentIndex: 0,
   answers: {},            // { questionIndex: ['A','B'] }
   timer: 0,
   timerInterval: null,
-  submitted: false
+  timerStart: 0,         // timestamp when exam started
+  submitted: false,
+  // Auth
+  user: null,            // Firebase user
+  userProfile: null,     // { username, ... } from Firestore
+  authLoading: true,
+  showUsernamePopup: false
 };
 
 const app = document.getElementById('app');
@@ -29,10 +36,14 @@ async function loadCert(certId) {
 function render() {
   switch (state.screen) {
     case 'home': renderHome(); break;
+    case 'login': renderLogin(); break;
     case 'mode': renderModeSelect(); break;
     case 'exam': renderExam(); break;
     case 'results': renderResults(); break;
+    case 'leaderboard': renderLeaderboard(); break;
   }
+  // Show username popup if needed
+  if (state.showUsernamePopup) renderUsernamePopup();
 }
 
 function renderHome() {
@@ -40,7 +51,7 @@ function renderHome() {
     ${renderNavbar()}
     <section class="hero">
       <div class="hero__content fade-in">
-        <div class="hero__badge">✨ Miễn phí 100% • Không cần đăng ký</div>
+        <div class="hero__badge">✨ Miễn phí 100% • ${state.user ? `Xin chào, ${state.userProfile?.username || 'User'}!` : 'Đăng nhập để lưu điểm'}</div>
         <h1>Luyện Thi Chứng Chỉ<br/><span>Salesforce</span></h1>
         <p class="hero__subtitle">Hệ thống ôn thi trắc nghiệm với hơn 500 câu hỏi chuẩn, hỗ trợ song ngữ Anh - Việt, chấm điểm tự động và giải thích chi tiết từng câu.</p>
       </div>
@@ -72,6 +83,9 @@ function renderHome() {
           <span>🔜 Coming Soon</span>
         </div>
       </div>
+    </div>
+    <div style="text-align:center;margin:32px 0;">
+      <button class="btn btn--secondary" onclick="showLeaderboard()" style="font-size:16px;padding:14px 32px;">🏆 Bảng Xếp Hạng</button>
     </div>
     ${renderFooter()}
   `;
@@ -380,13 +394,160 @@ function renderResults() {
 }
 
 function renderNavbar() {
+  let authHTML = '';
+  if (state.authLoading) {
+    authHTML = '<span style="font-size:13px;color:var(--gray-400);">...</span>';
+  } else if (state.user) {
+    const name = state.userProfile?.username || state.user.displayName || 'User';
+    const avatar = state.user.photoURL ? `<img src="${state.user.photoURL}" style="width:28px;height:28px;border-radius:50%;margin-right:8px;"/>` : '👤 ';
+    authHTML = `
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span style="font-size:13px;color:#fff;display:flex;align-items:center;">${avatar}${name}</span>
+        <button class="btn btn--ghost" onclick="doLogout()" style="font-size:12px;padding:4px 12px;color:#fff;border-color:rgba(255,255,255,0.3);">Đăng xuất</button>
+      </div>
+    `;
+  } else {
+    authHTML = `<button class="btn btn--primary" onclick="doLogin()" style="font-size:13px;padding:6px 16px;">🔵 Đăng nhập</button>`;
+  }
   return `
     <nav class="navbar">
       <a class="navbar__logo" onclick="goHome()">
         <div class="navbar__logo-icon">☁️</div>
         SF Exam Practice
       </a>
+      <div class="navbar__actions">${authHTML}</div>
     </nav>
+  `;
+}
+
+function renderLogin() {
+  app.innerHTML = `
+    ${renderNavbar()}
+    <div class="mode-selection fade-in" style="max-width:480px;text-align:center;">
+      <div style="font-size:64px;margin-bottom:24px;">🔐</div>
+      <h2 style="margin-bottom:8px;">Đăng nhập</h2>
+      <p style="color:var(--gray-500);margin-bottom:32px;">Đăng nhập để lưu kết quả thi và tham gia bảng xếp hạng</p>
+      <button class="btn btn--primary" onclick="doLogin()" style="font-size:16px;padding:14px 32px;width:100%;display:flex;align-items:center;justify-content:center;gap:10px;">
+        <img src="https://www.google.com/favicon.ico" style="width:20px;height:20px;"/> Đăng nhập bằng Google
+      </button>
+      <p style="margin-top:24px;">
+        <a onclick="goHome()" style="color:var(--sf-blue);cursor:pointer;">← Quay lại trang chủ (thi không cần đăng nhập)</a>
+      </p>
+    </div>
+    ${renderFooter()}
+  `;
+}
+
+function renderUsernamePopup() {
+  // Check if popup already exists
+  if (document.getElementById('username-popup')) return;
+  const overlay = document.createElement('div');
+  overlay.id = 'username-popup';
+  overlay.innerHTML = `
+    <div style="position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:1000;display:flex;align-items:center;justify-content:center;">
+      <div style="background:#fff;border-radius:16px;padding:40px;max-width:420px;width:90%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.3);">
+        <div style="font-size:48px;margin-bottom:16px;">🎉</div>
+        <h2 style="margin-bottom:8px;color:var(--gray-800);">Chào mừng bạn!</h2>
+        <p style="color:var(--gray-500);margin-bottom:24px;">Đặt tên hiển thị để xuất hiện trên bảng xếp hạng</p>
+        <input id="username-input" type="text" placeholder="Ví dụ: Nam Pham" 
+          style="width:100%;padding:12px 16px;border:2px solid var(--gray-200);border-radius:8px;font-size:16px;outline:none;box-sizing:border-box;margin-bottom:16px;"
+          maxlength="30"/>
+        <button class="btn btn--primary" onclick="saveUsername()" style="width:100%;padding:12px;font-size:15px;">Xác nhận ✓</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+  setTimeout(() => document.getElementById('username-input')?.focus(), 100);
+}
+
+async function renderLeaderboard() {
+  app.innerHTML = `
+    ${renderNavbar()}
+    <div class="mode-selection fade-in" style="max-width:700px;">
+      <h2 style="margin-bottom:8px;">🏆 Bảng Xếp Hạng</h2>
+      <p style="color:var(--gray-500);margin-bottom:16px;">Top 20 điểm cao nhất — Chế độ Thi thật</p>
+      <div style="display:flex;justify-content:center;margin-bottom:24px;">
+        <div style="position:relative;display:inline-block;">
+          <select id="cert-filter" onchange="filterLeaderboard(this.value)" 
+            style="appearance:none;-webkit-appearance:none;padding:10px 44px 10px 16px;
+            border:2px solid var(--sf-blue);border-radius:12px;font-size:14px;font-weight:600;
+            background:linear-gradient(135deg,rgba(1,118,211,0.04),rgba(1,118,211,0.08));
+            color:var(--sf-blue);cursor:pointer;min-width:240px;
+            box-shadow:0 2px 8px rgba(1,118,211,0.12);outline:none;transition:all .2s;">
+            <option value="all">⏳ Đang tải...</option>
+          </select>
+          <span style="position:absolute;right:14px;top:50%;transform:translateY(-50%);pointer-events:none;color:var(--sf-blue);font-size:12px;">▼</span>
+        </div>
+      </div>
+      <div id="leaderboard-content" style="text-align:center;padding:40px;">⏳ Đang tải...</div>
+      <div style="margin-top:24px;">
+        <button class="btn btn--ghost" onclick="goHome()">← Quay lại</button>
+      </div>
+    </div>
+    ${renderFooter()}
+  `;
+  if (!state.leaderboardData) {
+    try {
+      state.leaderboardData = await getAllLeaderboard(100);
+      state.leaderboardData = state.leaderboardData.filter(s => s.mode === 'full');
+    } catch (err) {
+      console.error(err);
+      const content = document.getElementById('leaderboard-content');
+      if (content) content.innerHTML = '<p style="color:var(--sf-error);">Không thể tải bảng xếp hạng. Vui lòng thử lại sau.</p>';
+      return;
+    }
+  }
+  const selected = state.leaderboardFilter || 'all';
+  // Build dropdown options
+  const certs = [...new Set((state.leaderboardData || []).map(s => s.certName).filter(Boolean))];
+  const dropdown = document.getElementById('cert-filter');
+  if (dropdown) {
+    dropdown.innerHTML = `<option value="all">📋 Tất cả chứng chỉ</option>` 
+      + certs.map(c => `<option value="${c}" ${c === selected ? 'selected' : ''}>${c}</option>`).join('');
+  }
+  buildLeaderboardTable(selected);
+}
+
+function buildLeaderboardTable(certFilter) {
+  let scores = [...(state.leaderboardData || [])];
+  if (certFilter && certFilter !== 'all') {
+    scores = scores.filter(s => s.certName === certFilter);
+  }
+  scores = scores.slice(0, 20);
+  const content = document.getElementById('leaderboard-content');
+  if (!content) return;
+  if (scores.length === 0) {
+    content.innerHTML = '<p style="color:var(--gray-400);padding:40px;">Chưa có ai thi. Hãy là người đầu tiên! 🚀</p>';
+    return;
+  }
+  const rows = scores.map((s, i) => {
+    const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `${i + 1}`;
+    const timeMin = s.timeUsed ? Math.round(s.timeUsed / 60) : '-';
+    const isMe = state.user && s.uid === state.user.uid;
+    const highlight = isMe ? 'background:rgba(1,118,211,0.06);font-weight:600;' : '';
+    return `<tr style="${highlight}">
+      <td style="padding:10px 12px;font-size:16px;">${medal}</td>
+      <td style="padding:10px 12px;text-align:left;">${s.username || 'Anonymous'}${isMe ? ' <span style="color:var(--sf-blue);font-size:11px;">(Bạn)</span>' : ''}</td>
+      <td style="padding:10px 12px;color:var(--gray-400);font-size:12px;">${s.certName || '-'}</td>
+      <td style="padding:10px 12px;font-weight:700;color:${s.score >= 65 ? 'var(--sf-success)' : 'var(--sf-error)'};">${s.score}%</td>
+      <td style="padding:10px 12px;">${s.correct}/${s.total}</td>
+      <td style="padding:10px 12px;color:var(--gray-500);">${timeMin} phút</td>
+    </tr>`;
+  }).join('');
+  content.innerHTML = `
+    <table style="width:100%;border-collapse:collapse;">
+      <thead>
+        <tr style="border-bottom:2px solid var(--gray-200);">
+          <th style="padding:10px 12px;font-size:13px;color:var(--gray-500);">#</th>
+          <th style="padding:10px 12px;text-align:left;font-size:13px;color:var(--gray-500);">Tên</th>
+          <th style="padding:10px 12px;font-size:13px;color:var(--gray-500);">Chứng chỉ</th>
+          <th style="padding:10px 12px;font-size:13px;color:var(--gray-500);">Điểm</th>
+          <th style="padding:10px 12px;font-size:13px;color:var(--gray-500);">Đúng</th>
+          <th style="padding:10px 12px;font-size:13px;color:var(--gray-500);">Thời gian</th>
+        </tr>
+      </thead>
+      <tbody>${rows}</tbody>
+    </table>
   `;
 }
 
@@ -475,6 +636,7 @@ window.startExam = function() {
   state.answers = {};
   state.submitted = false;
   state.practiceRevealed = {};
+  state.timerStart = Date.now();
 
   // Timer for full mode
   if (state.mode === 'full') {
@@ -487,7 +649,6 @@ window.startExam = function() {
         submitExam();
         return;
       }
-      // Update timer display only
       const timerEl = document.querySelector('.exam-timer');
       if (timerEl) {
         const mins = Math.floor(state.timer / 60);
@@ -641,17 +802,87 @@ window.toggleHint = function() {
   updateExamPartial();
 }
 
-window.submitExam = function() {
+window.submitExam = async function() {
   clearInterval(state.timerInterval);
   state.submitted = true;
   state.screen = 'results';
   render();
   window.scrollTo(0, 0);
+
+  // Auto-save score to Firebase if logged in
+  if (state.user && state.mode === 'full') {
+    try {
+      const total = state.questions.length;
+      let correct = 0;
+      state.questions.forEach((q, i) => {
+        const selected = state.answers[i] || [];
+        const correctArr = q.correct.split(',').map(s => s.trim());
+        if (selected.length === correctArr.length && selected.every(a => correctArr.includes(a))) correct++;
+      });
+      const score = Math.round((correct / total) * 100);
+      const timeUsed = Math.round((Date.now() - state.timerStart) / 1000);
+      await saveScore({
+        uid: state.user.uid,
+        username: state.userProfile?.username || state.user.displayName || 'Anonymous',
+        certName: state.certData?.certification || 'Unknown',
+        mode: state.mode,
+        score,
+        correct,
+        total,
+        timeUsed
+      });
+      console.log('Score saved to leaderboard!');
+    } catch (err) {
+      console.error('Failed to save score:', err);
+    }
+  }
 }
 
 window.retryExam = function() {
   state.screen = 'mode';
   render();
+}
+
+window.doLogin = async function() {
+  try {
+    await loginWithGoogle();
+  } catch (err) {
+    console.error('Login failed:', err);
+  }
+}
+
+window.doLogout = async function() {
+  await logout();
+  state.user = null;
+  state.userProfile = null;
+  render();
+}
+
+window.saveUsername = async function() {
+  const input = document.getElementById('username-input');
+  const username = input?.value?.trim();
+  if (!username) { input?.focus(); return; }
+  try {
+    await saveUserProfile(state.user.uid, { username });
+    state.userProfile = { ...state.userProfile, username };
+    state.showUsernamePopup = false;
+    document.getElementById('username-popup')?.remove();
+    render();
+  } catch (err) {
+    console.error('Failed to save username:', err);
+  }
+}
+
+window.showLeaderboard = function() {
+  state.screen = 'leaderboard';
+  state.leaderboardFilter = null;
+  state.leaderboardData = null;
+  render();
+}
+
+window.filterLeaderboard = function(certName) {
+  state.leaderboardFilter = certName;
+  buildLeaderboardTable(certName);
 }
 
 window.toggleLang = function() {
@@ -660,4 +891,16 @@ window.toggleLang = function() {
 }
 
 // ========== INIT ==========
-render();
+onAuthChange(async (user) => {
+  state.authLoading = false;
+  state.user = user;
+  if (user) {
+    const profile = await getUserProfile(user.uid);
+    state.userProfile = profile;
+    // First time login: show username popup
+    if (!profile || !profile.username) {
+      state.showUsernamePopup = true;
+    }
+  }
+  render();
+});
