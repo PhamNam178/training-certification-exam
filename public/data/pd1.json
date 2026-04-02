@@ -9494,7 +9494,9 @@
       "question": "A developer must implement a CheckPeymentProcessor class that provides check processing payment capabilities that adhere to what is defined for payments in the SzymentProcessor interface. public interface PaymentProcessor { void pay(Decimal amount); } Which implementation is correct to use the Payment? rocessor interface class?",
       "options": {
         "A": "public   class   CheckPaymentProcessor   implements   PaymentProcesscor   [ public   void   pay(Decimal   amount)   {  //   functional   code   here  4",
-        "B": "public   class   CheckPaymentProcessor   extends   PaymentProcessor   [ public   void   pay   (Decimal   amount);  }  @"
+        "B": "public   class   CheckPaymentProcessor   extends   PaymentProcessor   [ public   void   pay   (Decimal   amount);  }  @",
+        "C": "public class CheckPaymentProcessor implements PaymentProcessor { public Decimal pay(Decimal amount) {} }",
+        "D": "public class CheckPaymentProcessor extends PaymentProcessor { public Decimal pay(Decimal amount) {} }"
       },
       "correct": "A",
       "isMulti": false,
@@ -9502,7 +9504,9 @@
       "questionVI": "Nhà phát triển phải triển khai lớp CheckPeymentProcessor cung cấp khả năng xử lý thanh toán bằng séc tuân thủ những gì được xác định cho các khoản thanh toán trong giao diện SzymentProcessor. giao diện công cộng PaymentProcessor { void pay(Số thập phân); } Cách triển khai nào là đúng để sử dụng Thanh toán? lớp giao diện bộ xử lý?",
       "optionsVI": {
         "A": "lớp công khai CheckPaymentProcessor triển khai PaymentProcesscor [ public void pay(Số thập phân) { // mã chức năng ở đây 4",
-        "B": "lớp công khai CheckPaymentProcessor mở rộng PaymentProcessor [ public void pay (Số thập phân); } @"
+        "B": "lớp công khai CheckPaymentProcessor mở rộng PaymentProcessor [ public void pay (Số thập phân); } @",
+        "C": "public class CheckPaymentProcessor implements PaymentProcessor { public Decimal pay(Decimal amount) {} }",
+        "D": "public class CheckPaymentProcessor extends PaymentProcessor { public Decimal pay(Decimal amount) {} }"
       }
     },
     {
@@ -9510,8 +9514,9 @@
       "question": "The values ‘High’, ‘Medium’, and ‘Low’ are identified as common values for multiple picklists across different objects. What is an approach a developer can take to streamline maintenance of the picklists and their values, while also restricting the values to th ones mentioned above?",
       "options": {
         "A": "Create   the   Picklist   on   each   object   and   add   a   validation   rule   to   ensure   data   integrity.",
-        "B": "°o   Create   the   Picklist   on   each   object   and   use   a   Global   Picklist   Value   Set   containing   the   values. Cc;   Create   the   Picklist   on   each   object   and   select   “Restrict   picklist   to   the   values   defined   in   the   value   set”.",
-        "D": "Create   the   Picklist   on   each   object   as   a   required   field   and   select   \"Display   values   alphabetically,   not   in   the   order   entered”."
+        "B": "Create the Picklist on each object and use a Global Picklist Value Set to standardize the values.",
+        "C": "Create the Picklist on each object and configure the same values on each Picklist.",
+        "D": "Create a custom object to store the Picklist values and use a lookup relationship to each object."
       },
       "correct": "B",
       "isMulti": false,
@@ -9519,8 +9524,9 @@
       "questionVI": "Các giá trị 'Cao', 'Trung bình' và 'Thấp' được xác định là giá trị chung cho nhiều danh sách chọn trên các đối tượng khác nhau. Cách tiếp cận mà nhà phát triển có thể thực hiện để hợp lý hóa việc bảo trì danh sách chọn và các giá trị của chúng, đồng thời hạn chế các giá trị ở những giá trị được đề cập ở trên?",
       "optionsVI": {
         "A": "Tạo Danh sách chọn trên từng đối tượng và thêm Validation Rule để đảm bảo tính toàn vẹn dữ liệu.",
-        "B": "°o Tạo Danh sách chọn trên từng đối tượng và sử dụng Bộ Giá trị Danh sách chọn Toàn cầu có chứa các giá trị. Cc; Tạo Danh sách chọn trên mỗi đối tượng và chọn “Hạn chế danh sách chọn đối với các giá trị được xác định trong bộ giá trị”.",
-        "D": "Tạo Danh sách chọn trên mỗi đối tượng dưới dạng trường bắt buộc và chọn “Hiển thị giá trị theo thứ tự bảng chữ cái, không theo thứ tự đã nhập”."
+        "B": "Tạo Picklist trên mỗi đối tượng và sử dụng Global Picklist Value Set để chuẩn hóa các giá trị.",
+        "C": "Tạo Picklist trên mỗi đối tượng và cấu hình cùng giá trị trên mỗi Picklist.",
+        "D": "Tạo một đối tượng tùy chỉnh để lưu trữ các giá trị Picklist và sử dụng Lookup Relationship với mỗi đối tượng."
       }
     },
     {
@@ -9529,7 +9535,8 @@
       "options": {
         "A": "An   invocable   method",
         "B": "An   outbound   message",
-        "C": "An   Apex   controller  .9O   An   Apex   REST   class  @"
+        "C": "An Apex controller",
+        "D": "An Apex REST class"
       },
       "correct": "D",
       "isMulti": false,
@@ -9538,23 +9545,28 @@
       "optionsVI": {
         "A": "Một Method bất khả kháng",
         "B": "Một tin nhắn gửi đi",
-        "C": "Bộ điều khiển Apex .9O Apex Class REST @"
+        "C": "Một bộ điều khiển Apex",
+        "D": "Một lớp Apex REST"
       }
     },
     {
       "id": 473,
       "question": "A lead developer creates an Apex interface called Leptop. Consider the following code snippet: public class SilverLaptop{ //code implementation } How can a developer use the Laptop interface within the SiiverLaptop class?",
       "options": {
-        "A": "@Interface   (class=\"Laptop\") public   class   SilverLaptop 8.6   public   class   SilverLaptop   extends   Lapto;  Cc   public   class   SilverLaptop   implements   Laptop",
-        "D": "@Extends   (class=\"Laptop”)  public   class   SilverLaptop"
+        "A": "@Interface(class=\"Laptop\") public class SilverLaptop",
+        "B": "public class SilverLaptop extends Laptop",
+        "C": "public class SilverLaptop implements Laptop",
+        "D": "@Extends(class=\"Laptop\") public class SilverLaptop"
       },
       "correct": "B",
       "isMulti": false,
       "explanation": "💡 Giải thích:\nCâu trả lời đúng là B.",
       "questionVI": "Nhà phát triển chính tạo giao diện Apex có tên Leptop. Hãy xem xét đoạn mã sau: public class SilverLaptop{ //code performance } Làm cách nào nhà phát triển có thể sử dụng giao diện Laptop trong lớp SiiverLaptop?",
       "optionsVI": {
-        "A": "@Interface (class=\"Laptop\") lớp công khai SilverLaptop 8.6 lớp công khai SilverLaptop mở rộng Lapto; Cc public class SilverLaptop thực hiện Laptop",
-        "D": "@Extends (class=\"Laptop\") lớp công khai SilverLaptop"
+        "A": "@Interface(class=\"Laptop\") public class SilverLaptop",
+        "B": "public class SilverLaptop extends Laptop",
+        "C": "public class SilverLaptop implements Laptop",
+        "D": "@Extends(class=\"Laptop\") public class SilverLaptop"
       }
     },
     {
@@ -9562,7 +9574,9 @@
       "question": "While working in a sandbox, an Apex test fails when run in the Test Runner. However, executing the Apex logic in the Execute Anonymous window succeeds with no exceptions or errors. Why did the method fail in the sandbox test framework but succeed in the Developer Console?",
       "options": {
         "A": "The   test   method   does   not   use   System.   runs   to   execute   as   a   specific   user.",
-        "B": "The   test   method   is   calling   an   @fucure   method.  Cc;   The   test   method   has   a   syntax   error   in   the   code.  oO   The   test   method   relies   on   existing   data   in   the   sandbox. ~)    @"
+        "B": "The test method is calling an @future method.",
+        "C": "The test method has a syntax error in the code.",
+        "D": "The test method relies on existing org data."
       },
       "correct": "B",
       "isMulti": false,
@@ -9570,7 +9584,9 @@
       "questionVI": "Khi làm việc trong Sandbox, thử nghiệm Apex không thành công khi chạy trong Người chạy thử. Tuy nhiên, việc thực thi logic Apex trong cửa sổ Thực thi ẩn danh thành công mà không có ngoại lệ hoặc lỗi nào. Tại sao Method này không thành công trong khung thử nghiệm Sandbox nhưng lại thành công trong Developer Console?",
       "optionsVI": {
         "A": "Method thử nghiệm không sử dụng System. chạy để thực thi như một người dùng cụ thể.",
-        "B": "Phương thức thử nghiệm đang gọi phương thức @fucure. Cc; Method kiểm tra có lỗi cú pháp trong mã. oO Method thử nghiệm dựa trên dữ liệu hiện có trong Sandbox. ~) @"
+        "B": "Phương thức thử nghiệm đang gọi phương thức @future.",
+        "C": "Phương thức thử nghiệm có lỗi cú pháp trong mã.",
+        "D": "Phương thức thử nghiệm phụ thuộc vào dữ liệu Org hiện có."
       }
     },
     {
@@ -9578,8 +9594,9 @@
       "question": "A Salesforce administrator used Flow Bullder to create a flow named “accountOnboarding”. The flow must be used inside an Aura componen Which tag should a developer use to display the flow in the component?",
       "options": {
         "A": "aura:tlow",
-        "B": "lightning-Zlow i   °   lightning:   flow",
-        "D": "aura-Zlow"
+        "B": "lightning-flow",
+        "C": "lightning:flow",
+        "D": "lightning:flowRuntime"
       },
       "correct": "D",
       "isMulti": false,
@@ -9587,8 +9604,9 @@
       "questionVI": "Quản trị viên Salesforce đã sử dụng Flow Bullder để tạo một quy trình có tên là “AccountOnboarding”. Luồng phải được sử dụng bên trong Aura Component Nhà phát triển nên sử dụng thẻ nào để hiển thị Flow trong thành phần?",
       "optionsVI": {
         "A": "hào quang:tlow",
-        "B": "sét-Zlow i ° sét: dòng chảy",
-        "D": "hào quang-Zlow"
+        "B": "lightning-flow",
+        "C": "lightning:flow",
+        "D": "lightning:flowRuntime"
       }
     },
     {
@@ -9596,8 +9614,9 @@
       "question": "Universal Containers wants to automatically assign new cases to the appropriate support representative based on the case origin. They haw created a custom field on the Case object to store the support representative name. What would be the best solution for this requirement?",
       "options": {
         "A": "Use   a   trigger   on   the   Case   object   to   assign   the   case   to   the   appropriate   support   representative",
-        "B": "Use   a   Process   Builder   to   assign   the   case   to   the   appropriate   support   representative CG   °   Use   a   Flow   to   assign   the   case   to   the   appropriate   support   representative",
-        "D": "Use   a   time-based   workflow   rule   to   assign   the   case   to   the   appropriate   support   representative  @"
+        "B": "Use a Process Builder to assign the case to the appropriate support representative.",
+        "C": "Use a Flow to assign the case to the appropriate support representative.",
+        "D": "Use a time-based workflow rule to assign the case to the appropriate support representative."
       },
       "correct": "C",
       "isMulti": false,
@@ -9605,17 +9624,18 @@
       "questionVI": "Universal Containers muốn tự động chỉ định các trường hợp mới cho đại diện hỗ trợ phù hợp dựa trên nguồn gốc của trường hợp. Họ đã tạo một Custom Field trên đối tượng Case để lưu trữ tên người đại diện hỗ trợ. Giải pháp tốt nhất cho yêu cầu này là gì?",
       "optionsVI": {
         "A": "Sử dụng Trigger trên đối tượng Trường hợp để chỉ định trường hợp cho đại diện hỗ trợ thích hợp",
-        "B": "Sử dụng Process Builder để chỉ định trường hợp cho đại diện hỗ trợ thích hợp CG ° Sử dụng Quy trình để chỉ định trường hợp cho đại diện hỗ trợ thích hợp",
-        "D": "Sử dụng quy tắc quy trình làm việc dựa trên thời gian để phân công trường hợp cho đại diện hỗ trợ phù hợp @"
+        "B": "Sử dụng Process Builder để chỉ định trường hợp cho đại diện hỗ trợ thích hợp.",
+        "C": "Sử dụng Quy trình (Flow) để chỉ định trường hợp cho đại diện hỗ trợ thích hợp.",
+        "D": "Sử dụng quy tắc quy trình làm việc dựa trên thời gian để phân công trường hợp cho đại diện hỗ trợ phù hợp."
       }
     },
     {
       "id": 477,
       "question": "Refer to the following Apex code: } while (x < 1); System. debug (x); What is the value of x when it is written to the debug log?",
       "options": {
-        "A": "°",
+        "A": "0",
         "B": "1",
-        "C": "°o   2",
+        "C": "2",
         "D": "3"
       },
       "correct": "C",
@@ -9623,9 +9643,9 @@
       "explanation": "💡 Giải thích:\nCâu trả lời đúng là C: °o 2. Đây là hành vi tiêu chuẩn của Salesforce.",
       "questionVI": "Tham khảo mã Apex sau: } while (x < 1); Hệ thống. gỡ lỗi (x); Giá trị của x khi nó được ghi vào nhật ký gỡ lỗi là gì?",
       "optionsVI": {
-        "A": "°",
+        "A": "0",
         "B": "1",
-        "C": "°o 2",
+        "C": "2",
         "D": "3"
       }
     },
@@ -9633,18 +9653,20 @@
       "id": 478,
       "question": "Universal Containers needs to create a custom user interface component that allows users to enter information about their accounts. The component should be able to validate the user input before saving the information to the database. What is the best technology to create this component?",
       "options": {
-        "A": "emit   ()",
-        "B": "°o   ize) Cc.   registerEvent   ()",
-        "D": "fireEvent   ()"
+        "A": "emit()",
+        "B": "Aura component",
+        "C": "Lightning web component",
+        "D": "fireEvent()"
       },
       "correct": "B",
       "isMulti": false,
       "explanation": "💡 Giải thích:\nĐáp án đúng là B:°o ize) Cc. đăng kýSự kiện(). Đây là hành vi tiêu chuẩn của Salesforce.",
       "questionVI": "Universal Containers cần tạo thành phần giao diện người dùng tùy chỉnh cho phép người dùng nhập thông tin về tài khoản của họ. Thành phần này có thể xác thực thông tin đầu vào của người dùng trước khi lưu thông tin vào cơ sở dữ liệu. Công nghệ tốt nhất để tạo ra thành phần này là gì?",
       "optionsVI": {
-        "A": "phát ra ()",
-        "B": "°o ize) Cc. đăng kýSự kiện ()",
-        "D": "sự kiện cháy ()"
+        "A": "emit()",
+        "B": "Aura component",
+        "C": "Lightning web component",
+        "D": "fireEvent()"
       }
     },
     {
@@ -9671,43 +9693,50 @@
       "id": 480,
       "question": "A custom Visualforce controller calls the ApexPeges.sddMesseg=() method, but no messages are rendering on the page. Which component should be added to the Visualforce page to display the message?",
       "options": {
-        "A": "<apex:pageMessage   severity=\"info\"   />",
-        "B": "<apex:message   for=\"info\"/> °@   <apex:pageMessages   />",
-        "D": "<apex:facet   name=\"messages”   />   @"
+        "A": "<apex:pageMessage severity=\"info\" />",
+        "B": "<apex:message for=\"info\" />",
+        "C": "<apex:pageMessages />",
+        "D": "<apex:facet name=\"messages\" />"
       },
       "correct": "D",
       "isMulti": false,
       "explanation": "💡 Giải thích:\nCâu trả lời đúng là D: <apex:facet name=\"messages\" /> @. Đây là hành vi tiêu chuẩn của Salesforce.",
       "questionVI": "Bộ điều khiển Visualforce tùy chỉnh gọi phương thức ApexPeges.sddMesseg=() nhưng không có thông báo nào hiển thị trên trang. Thành phần nào nên được thêm vào Visualforce Page để hiển thị thông báo?",
       "optionsVI": {
-        "A": "<apex:pageMessage mức độ nghiêm trọng=\"thông tin\" />",
-        "B": "<apex:message for=\"info\"/> °@ <apex:pageMessages />",
-        "D": "<apex:facet name=\"messages\" /> @"
+        "A": "<apex:pageMessage severity=\"info\" />",
+        "B": "<apex:message for=\"info\" />",
+        "C": "<apex:pageMessages />",
+        "D": "<apex:facet name=\"messages\" />"
       }
     },
     {
       "id": 481,
-      "question": "An Apex method, getAccounts, that returns a list of Accounts given a searcnT=rn, is available for Lightning Web Components to use. What is the correct definition of a Lightning Web Component property that uses the ceticcounts method?",
+      "question": "An Apex method, getAccounts, that returns a list of Accounts given a searchTerm, is available to be utilized as a data source. Which Lightning web component code would correctly call the method?",
       "options": {
-        "A": "B.",
-        "C": "D. @AuraEnabledi(getAccounts,   *SsearchTerm')  accountList;  Q@wire(gecAccounts,   'SsearchTern') accountList;  @wire(gecAccounts,   {   searchTerm:   ‘SsearchTerm'   }) accountList;  @AuraEnabled(getAccounts,   {   searchTerm:   'SsearchTerm'   }) accountList;  @"
+        "A": "@AuraEnabled(getAccounts, '$searchTerm') accountList;",
+        "B": "@wire(getAccounts, '$searchTerm') accountList;",
+        "C": "@wire(getAccounts, { searchTerm: '$searchTerm' }) accountList;",
+        "D": "@AuraEnabled(getAccounts, { searchTerm: '$searchTerm' }) accountList;"
       },
       "correct": "C",
       "isMulti": false,
       "explanation": "💡 Giải thích:\nCâu trả lời đúng là C: D. @AuraEnabledi(getAccounts, *SsearchTerm') accountList; Danh sách tài khoản Q@wire(gecAccounts, 'SsearchTern'); @wire(gecAccounts, { searchTerm: ‘SsearchTerm' }) accountList; @AuraEnabled(getAccounts, { searchTerm: 'SsearchTerm' }) accountList; @. Đây là hành vi tiêu chuẩn của Salesforce.\n\n📌 Mẹo Senior: Hãy đọc kỹ keyword trong phần giải thích vì đây là bẫy phổ biến của đề PD1.",
-      "questionVI": "Một phương thức Apex, getAccounts, trả về danh sách các Tài khoản được cung cấp searcnT=rn, có sẵn để các Thành phần Lightning Web sử dụng. Định nghĩa chính xác về thuộc tính Thành phần Lightning Web sử dụng Method ceticcounts là gì?",
+      "questionVI": "Một phương thức Apex, getAccounts, trả về danh sách Tài khoản theo searchTerm, có sẵn để sử dụng làm nguồn dữ liệu. Mã Lightning web component nào sẽ gọi phương thức đúng cách?",
       "optionsVI": {
-        "A": "B.",
-        "C": "D. Danh sách tài khoản @AuraEnabledi(getAccounts, *SsearchTerm'); Danh sách tài khoản Q@wire(gecAccounts, 'SsearchTern'); @wire(gecAccounts, { searchTerm: ‘SsearchTerm' }) accountList; @AuraEnabled(getAccounts, { searchTerm: 'SsearchTerm' }) accountList; @"
+        "A": "@AuraEnabled(getAccounts, '$searchTerm') accountList;",
+        "B": "@wire(getAccounts, '$searchTerm') accountList;",
+        "C": "@wire(getAccounts, { searchTerm: '$searchTerm' }) accountList;",
+        "D": "@AuraEnabled(getAccounts, { searchTerm: '$searchTerm' }) accountList;"
       }
     },
     {
       "id": 482,
       "question": "Universal Containers is developing a new Lightning web component for their marketing department. They want to ensure that the componei is fine tuned and provides a seamless user experience. What are some benefits of using the Lightning Component framework?",
       "options": {
-        "A": "Easy   integration   with   third-party   libraries",
-        "B": "Automatic   support   for   accessibility   standards  cS   Compatibility   with   all   web   browsers",
-        "D": "°o   Better   performance   due   to   client-side   rendering"
+        "A": "Easy integration with third-party libraries",
+        "B": "Automatic support for accessibility standards",
+        "C": "Compatibility with all web browsers",
+        "D": "Better performance due to client-side rendering"
       },
       "correct": "D",
       "isMulti": false,
@@ -9715,8 +9744,9 @@
       "questionVI": "Universal Containers đang phát triển Lightning Web Component mới cho bộ phận tiếp thị của họ. Họ muốn đảm bảo rằng thành phần được tinh chỉnh và cung cấp trải nghiệm người dùng liền mạch. Một số lợi ích của việc sử dụng khung Thành phần Lightning là gì?",
       "optionsVI": {
         "A": "Dễ dàng tích hợp với thư viện của bên thứ ba",
-        "B": "Tự động hỗ trợ các tiêu chuẩn tiếp cận cS Khả năng tương thích với tất cả các trình duyệt web",
-        "D": "°o Hiệu suất tốt hơn nhờ kết xuất phía máy khách"
+        "B": "Tự động hỗ trợ các tiêu chuẩn tiếp cận",
+        "C": "Khả năng tương thích với tất cả các trình duyệt web",
+        "D": "Hiệu suất tốt hơn nhờ kết xuất phía máy khách"
       }
     },
     {
@@ -9724,7 +9754,9 @@
       "question": "Refer to the following code snippet for an environment that has more than 200 Accounts belonging to the ‘Technology’ industry: for(Account thisAccount : [SELECT id, industry FROM Account LIMIT 150]){ if(thishkecount.industry == 'Technolegy’) { thishkecount.is_ Tech ¢ = true; } update thisAkecount; } When the code executes, what happens as a result of the Apex transaction?",
       "options": {
         "A": "If   executed   in   a   synchronous   context,   the   Apex   transaction   is   likely   to   fail   by   exceeding   the   DML   governor   limit.",
-        "B": "If   executed   in   an   asynchronous   context,   the   Apex   transaction   is   likely   to   fall   by   exceeding   the   DML   governor   limit. G   The   Apex   transaction   succeeds   and   all   processed   accounts   are   updated   if   no   exceptions   occur   during   the   update. 0.9   The   Apex   transaction   fails   with   the   following   message:   SObject   row   was   retrieved   vie   SOQL   without   querying   the requested   field:   Account.Is   Tech_c. @ kryterion  by   ORAKE   INTERNATIONAL  Glest   Aids~   ?Suppo  ‘ime   Remaining   :   00:54:09"
+        "B": "If   executed   in   an   asynchronous   context,   the   Apex   transaction   is   likely   to   fall   by   exceeding   the   DML   governor   limit. G   The   Apex   transaction   succeeds   and   all   processed   accounts   are   updated   if   no   exceptions   occur   during   the   update. 0.9   The   Apex   transaction   fails   with   the   following   message:   SObject   row   was   retrieved   vie   SOQL   without   querying   the requested   field:   Account.Is   Tech_c. @ kryterion  by   ORAKE   INTERNATIONAL  Glest   Aids~   ?Suppo  ‘ime   Remaining   :   00:54:09",
+        "C": "If executed in a synchronous context, the Apex transaction will succeed without issues.",
+        "D": "If executed in an asynchronous context, the Apex transaction will succeed without issues."
       },
       "correct": "D",
       "isMulti": false,
@@ -9732,7 +9764,9 @@
       "questionVI": "Hãy tham khảo đoạn mã sau để biết môi trường có hơn 200 Tài khoản thuộc ngành 'Công nghệ': for(Account thisAccount : [SELECT id, Industry FROM Account LIMIT 150]){ if(thishkecount.industry == 'Technolegy') { thishkecount.is_ Tech ¢ = true; } cập nhật Akecount này; } Khi mã thực thi, điều gì xảy ra do giao dịch Apex?",
       "optionsVI": {
         "A": "Nếu được thực thi trong bối cảnh đồng bộ, giao dịch Apex có thể không thành công do vượt quá giới hạn điều chỉnh DML.",
-        "B": "Nếu được thực hiện trong bối cảnh không đồng bộ, giao dịch Apex có thể bị giảm do vượt quá giới hạn điều chỉnh DML. G Giao dịch Apex thành công và tất cả các tài khoản đã xử lý sẽ được cập nhật nếu không có ngoại lệ nào xảy ra trong quá trình cập nhật. 0.9 Giao dịch Apex không thành công với thông báo sau: Đã truy xuất hàng SObject qua SOQL mà không truy vấn trường được yêu cầu: Account.Is Tech_c. @ kryterion của ORAKE INTERNATIONAL Glest Aids~ ?Suppo ‘ime Còn lại : 00:54:09"
+        "B": "Nếu được thực hiện trong bối cảnh không đồng bộ, giao dịch Apex có thể bị giảm do vượt quá giới hạn điều chỉnh DML. G Giao dịch Apex thành công và tất cả các tài khoản đã xử lý sẽ được cập nhật nếu không có ngoại lệ nào xảy ra trong quá trình cập nhật. 0.9 Giao dịch Apex không thành công với thông báo sau: Đã truy xuất hàng SObject qua SOQL mà không truy vấn trường được yêu cầu: Account.Is Tech_c. @ kryterion của ORAKE INTERNATIONAL Glest Aids~ ?Suppo ‘ime Còn lại : 00:54:09",
+        "C": "Nếu thực thi trong ngữ cảnh đồng bộ, giao dịch Apex sẽ thành công mà không có vấn đề.",
+        "D": "Nếu thực thi trong ngữ cảnh không đồng bộ, giao dịch Apex sẽ thành công mà không có vấn đề."
       }
     },
     {
@@ -9741,7 +9775,8 @@
       "options": {
         "A": "Flux   (view,   action,   dispatcher,   and   store)",
         "B": "Agile   Development",
-        "C": "Waterfall   Model  0.9   Model-View-Controller   (MVC)"
+        "C": "Waterfall Model",
+        "D": "Model-View-Controller (MVC)"
       },
       "correct": "D",
       "isMulti": false,
@@ -9750,7 +9785,8 @@
       "optionsVI": {
         "A": "Thông lượng (xem, hành động, điều phối và lưu trữ)",
         "B": "Phát triển linh hoạt",
-        "C": "Mô hình thác nước 0.9 Model-View-Controller (MVC)"
+        "C": "Mô hình Thác nước",
+        "D": "Mô hình Model-View-Controller (MVC)"
       }
     },
     {
@@ -9759,7 +9795,8 @@
       "options": {
         "A": "Developer   Console",
         "B": "Force.com   IDE",
-        "C": "Execute   Anonymous  .¢   VS   Code"
+        "C": "Execute Anonymous",
+        "D": "VS Code"
       },
       "correct": "D",
       "isMulti": false,
@@ -9768,16 +9805,18 @@
       "optionsVI": {
         "A": "Developer Console",
         "B": "Force.com IDE",
-        "C": "Thực thi ẩn danh .¢ Mã VS"
+        "C": "Execute Anonymous",
+        "D": "VS Code"
       }
     },
     {
       "id": 486,
       "question": "A developer creates 2 new Apex trigger with a helper class, and writes a test class that only exercises 95% coverage of the new Apex helper class. Change Set deployment to production fails with the test coverage warning: \"Test coverage of selected Apex Trigger is 0%, at least 1% test coverage is required.” What should the developer",
       "options": {
-        "A": "Create   a   test   class   and   methods   to   cover   the   Apex   trigger.",
-        "B": "Run   the   tests   using   the   ‘Run   All   Tests’   method.  Cc.   Increase   the   test   class   coverage   on   the   helper   class.",
-        "D": "Remove   the   failing   test   methods   from   the   test   class.  VA   MF   wy   on   ake   intERNATIONAL   hel lest   Aids~   ?Support   ExitE  Time   Remaining   :   00:55:18"
+        "A": "Create a test class and methods to cover the Apex trigger.",
+        "B": "Run the tests using the 'Run All Tests' method.",
+        "C": "Increase the test class coverage on the helper class.",
+        "D": "Remove the failing test methods from the test class."
       },
       "correct": "A",
       "isMulti": false,
@@ -9785,13 +9824,14 @@
       "questionVI": "Một nhà phát triển tạo 2 Apex Trigger mới với một lớp trợ giúp và viết một lớp thử nghiệm chỉ thực hiện mức độ bao phủ 95% của lớp trợ giúp Apex mới. Thay đổi Việc triển khai Bộ thành sản xuất không thành công với cảnh báo phạm vi kiểm tra: \"Phạm vi kiểm tra của Apex Trigger đã chọn là 0%, cần có phạm vi kiểm tra ít nhất 1%.\" Nhà phát triển nên làm gì",
       "optionsVI": {
         "A": "Tạo một lớp thử nghiệm và các phương thức để hỗ trợ Apex Trigger.",
-        "B": "Chạy thử nghiệm bằng Method 'Chạy tất cả thử nghiệm'. Cc. Tăng phạm vi bao phủ của lớp kiểm tra trên lớp trợ giúp.",
-        "D": "Loại bỏ các phương thức kiểm tra không thành công khỏi lớp kiểm tra. VA MF wy on ake INTERNATIONAL hel lest Aids~ ?Hỗ trợ Thoát Thời gian còn lại : 00:55:18"
+        "B": "Chạy thử nghiệm bằng phương thức 'Chạy tất cả thử nghiệm'.",
+        "C": "Tăng phạm vi bao phủ của lớp kiểm tra trên lớp trợ giúp.",
+        "D": "Loại bỏ các phương thức kiểm tra không thành công khỏi lớp kiểm tra."
       }
     },
     {
       "id": 487,
-      "question": "1 of 60 ‘A developer is alerted to an issue with a custom Apex trigger that is causing records to be duplicated. What is the most appropriate debugging approach to troubleshoot the issue?",
+      "question": "",
       "options": {
         "A": "Disable the trigger in production and test to see if the issue still occurs.",
         "B": "Add system.debug statements to the code to track the execution flow and identify the issue.",
@@ -9811,7 +9851,7 @@
     },
     {
       "id": 488,
-      "question": "2 of 60 (=) While writing an Apex class, a developer wants to make sure that all functionality being developed is handled as specified by the requirements. Which approach should the developer use to be sure that the Apex class is working according to specifications?",
+      "question": "While writing an Apex class, a developer wants to make sure that all functionality being developed is handled as specified by the requirements. Which approach should the developer use to be sure that the Apex class is working according to specifications?",
       "options": {
         "A": "Create a test class to execute the business logic and run the test in the Developer Console.",
         "B": "Run the code in an Execute Anonymous block in the Developer Console.",
@@ -9831,10 +9871,11 @@
     },
     {
       "id": 489,
-      "question": "3 of 60 (=) |‘A developer has identified a method in an Apex class that performs resource intensive actions in memory by iterating over the result set of a SOQL statement on the account. The method also performs a DML statement to save the changes to the database. Which two techniques should the developer implement as a best practice to ensure transaction control and avoid exceeding governor limits?",
+      "question": "‘A developer has identified a method in an Apex class that performs resource intensive actions in memory by iterating over the result set of a SOQL statement on the account. The method also performs a DML statement to save the changes to the database. Which two techniques should the developer implement as a best practice to ensure transaction control and avoid exceeding governor limits?",
       "options": {
-        "A": "Use the Database. Savepoint method to enforce database integrity.",
-        "B": "Use the System. Limit class to monitor the current CPU governor limit consumption. Ci C. Use the @Readon1y annotation to bypass the number of rows returned by a SOQL.",
+        "A": "Use the Database.Savepoint method to enforce database integrity.",
+        "B": "Use the System.Limit class to monitor the current CPU governor limit consumption.",
+        "C": "Use the @ReadOnly annotation to bypass the number of rows returned by a SOQL.",
         "D": "Use partial DML statements to ensure only valid data is committed."
       },
       "correct": "A,D",
@@ -9842,14 +9883,15 @@
       "explanation": "💡 Giải thích:\nĐáp án đúng là A, D: Sử dụng cơ sở dữ liệu. Phương pháp savepoint để thực thi tính toàn vẹn của cơ sở dữ liệu. VÀ Sử dụng câu lệnh DML một phần để đảm bảo chỉ có dữ liệu hợp lệ được cam kết.. Đây là hành vi tiêu chuẩn của Salesforce.\n\n📌 Mẹo Senior: Hãy đọc kỹ keyword trong phần giải thích vì đây là bẫy phổ biến của đề PD1.",
       "questionVI": "3 trên 60 (=) |'Nhà phát triển đã xác định được một phương thức trong Apex Class thực hiện các hành động sử dụng nhiều tài nguyên trong bộ nhớ bằng cách lặp lại tập kết quả của câu lệnh SOQL trên tài khoản. Phương thức này cũng thực hiện câu lệnh DML để lưu các thay đổi vào cơ sở dữ liệu. Nhà phát triển nên triển khai hai kỹ thuật nào như một Method hay nhất để đảm bảo kiểm soát giao dịch và tránh vượt quá giới hạn của thống đốc?",
       "optionsVI": {
-        "A": "Sử dụng cơ sở dữ liệu. Method savepoint để thực thi tính toàn vẹn của cơ sở dữ liệu.",
-        "B": "Sử dụng Hệ thống. Lớp giới hạn để giám sát mức tiêu thụ giới hạn của bộ điều chỉnh CPU hiện tại. Ci C. Sử dụng annotation @Readon1y để bỏ qua số hàng được SOQL trả về.",
+        "A": "Sử dụng phương thức Database.Savepoint để thực thi tính toàn vẹn của cơ sở dữ liệu.",
+        "B": "Sử dụng System.Limit class để giám sát mức tiêu thụ giới hạn CPU hiện tại.",
+        "C": "Sử dụng annotation @ReadOnly để bỏ qua giới hạn số hàng được SOQL trả về.",
         "D": "Sử dụng các câu lệnh DML một phần để đảm bảo chỉ có dữ liệu hợp lệ mới được cam kết."
       }
     },
     {
       "id": 490,
-      "question": "4 of 60 (=) A developer wants to get access to the standard price book in the org while writing a test class that covers an OpportunityLineltem trigger. Which method allows access to the price book?",
+      "question": "A developer wants to get access to the standard price book in the org while writing a test class that covers an OpportunityLineltem trigger. Which method allows access to the price book?",
       "options": {
         "A": "Use Test .getStandardPricebookId() to get the standard price book ID.",
         "B": "Use @TestVisible to allow the test method to see the standard price book.",
@@ -9869,7 +9911,7 @@
     },
     {
       "id": 491,
-      "question": "5 of 60 (=) (} ‘Assuming that nane is a String obtained by an <apex: inputText> tag on a Visualforce page, which two SOQL queries performed are safe from SOQL injection?",
+      "question": "(} ‘Assuming that nane is a String obtained by an <apex: inputText> tag on a Visualforce page, which two SOQL queries performed are safe from SOQL injection?",
       "options": {
         "A": "String query = '§' + name + '% List<Account> results = [SELECT Id FROM Account WHERE Name LIKE :query];",
         "B": "String query = 'SELECT Id FROM Account WHERE Name LIKE \\'$' + name + '8\\''y List<Account> results = Database.query (query) +",
@@ -9889,11 +9931,12 @@
     },
     {
       "id": 492,
-      "question": "6 of 60 (=) A developer created a Lightning web component called statusComponent to be inserted into the Account record page. Which two things should the developer do to make this component available?",
+      "question": "A developer created a Lightning web component called statusComponent to be inserted into the Account record page. Which two things should the developer do to make this component available?",
       "options": {
         "A": "Add<target>lightning_RecordPage</target> to the statusComponent. js file.",
         "B": "Add<target>lightning_RecordPage</target> to the statusComponent . js-meta.xml file.",
-        "C": "Set isExposedto true in the statusComponent.js-meta.xml file. OD. Add <masterLabel>Account</masterLabel> to the statusComponent . js-meta. xml file."
+        "C": "Set isExposed to true in the statusComponent.js-meta.xml file.",
+        "D": "Add <masterLabel>Account</masterLabel> to the statusComponent.js-meta.xml file."
       },
       "correct": "B",
       "isMulti": false,
@@ -9902,12 +9945,13 @@
       "optionsVI": {
         "A": "Thêm<target>lightning_RecordPage</target> vào statusComponent. tập tin js.",
         "B": "Thêm<target>lightning_RecordPage</target> vào statusComponent . tập tin js-meta.xml.",
-        "C": "Đặt isExpose thành true trong tệp statusComponent.js-meta.xml. OD. Thêm <masterLabel>Tài khoản</masterLabel> vào statusComponent . js-meta. tập tin xml."
+        "C": "Đặt isExposed thành true trong file statusComponent.js-meta.xml.",
+        "D": "Thêm <masterLabel>Account</masterLabel> vào file statusComponent.js-meta.xml."
       }
     },
     {
       "id": 493,
-      "question": "8 of 60 (=) (} ‘An Apex method, getAccounts, that returns a list of Accounts given a searchTern, is available for Lightning Web Components to use. What is the correct definition of a Lightning Web Component property that uses the getAccounts method?",
+      "question": "(} ‘An Apex method, getAccounts, that returns a list of Accounts given a searchTern, is available for Lightning Web Components to use. What is the correct definition of a Lightning Web Component property that uses the getAccounts method?",
       "options": {
         "A": "@wire(getAccounts, '$searchTerm') accountList;",
         "B": "@wire(getAccounts, { searchTerm: accountList; searchTerm' })",
@@ -9927,7 +9971,7 @@
     },
     {
       "id": 494,
-      "question": "11 of 60 (=) A ssoftware company is using Salesforce to track the companies they sell their software to in the Account object. They also use Salesforce to track bugs in their software with a custom object, Bug__c. As part of a process improvement initiative, they want to be able to report on which companies have reported which bugs. Each company should be able to report multiple bugs and bugs can also be reported by multiple companies. What is needed to allow this reporting?",
+      "question": "A ssoftware company is using Salesforce to track the companies they sell their software to in the Account object. They also use Salesforce to track bugs in their software with a custom object, Bug__c. As part of a process improvement initiative, they want to be able to report on which companies have reported which bugs. Each company should be able to report multiple bugs and bugs can also be reported by multiple companies. What is needed to allow this reporting?",
       "options": {
         "A": "Master-detail field on Bug__c to Account",
         "B": "Junction object between Bug__c and Account",
@@ -9947,7 +9991,7 @@
     },
     {
       "id": 495,
-      "question": "13 of 60 (=) ‘A developer is creating a page that allows users to create multiple Opportunities. The developer is asked to verify the current user's default Opportunity record type, and set certain default values based on the record type before inserting the record. How can the developer find the current user's default record type?",
+      "question": "‘A developer is creating a page that allows users to create multiple Opportunities. The developer is asked to verify the current user's default Opportunity record type, and set certain default values based on the record type before inserting the record. How can the developer find the current user's default record type?",
       "options": {
         "A": "Query the Profile where the ID equals userInfo.getProfileID() and then use the profile. Opportunity.getDefaultRecordType () method.",
         "B": "Create the opportunity and check the opportunity. recordType, which will have the record ID of the current user's default record type, before inserting.",
@@ -9967,7 +10011,7 @@
     },
     {
       "id": 496,
-      "question": "15 of 60 (=) A developer is asked to prevent anyone other than a user with Sales Manager profile from changing the Opportunity Status to Closed Lost if the lost reason is blank. Which automation allows the developer to satisfy this requirement in the most efficient manner?",
+      "question": "A developer is asked to prevent anyone other than a user with Sales Manager profile from changing the Opportunity Status to Closed Lost if the lost reason is blank. Which automation allows the developer to satisfy this requirement in the most efficient manner?",
       "options": {
         "A": "Arecord trigger flow on the Opportunity object",
         "B": "An approval process on the Opportunity object",
@@ -9987,7 +10031,7 @@
     },
     {
       "id": 497,
-      "question": "17 of 60 (=) A ssoftware company uses the following objects and relationships: * Case: to handle customer support issues * Defect__c:a custom object to represent known issues with the company's software * Case _Defect__c: ajunction object between Case and Defect _c to represent that a defect is a cause of a customer issue Case and Defect __c have Private organization-wide defaults. What should be done to share a specific Case_Defect__c record with a user?",
+      "question": "A ssoftware company uses the following objects and relationships: * Case: to handle customer support issues * Defect__c:a custom object to represent known issues with the company's software * Case _Defect__c: ajunction object between Case and Defect _c to represent that a defect is a cause of a customer issue Case and Defect __c have Private organization-wide defaults. What should be done to share a specific Case_Defect__c record with a user?",
       "options": {
         "A": "Share the case_Defect__c record.",
         "B": "Share the parent Case and Defect _c records.",
@@ -10007,7 +10051,7 @@
     },
     {
       "id": 498,
-      "question": "18 of 60 (=) |A developer has the following requirements: * Calculate the total amount on an Order. * Calculate the line amount for each Line Item based on quantity selected and price. * Move Line Items to a different Order if a Line Item is not in stock. Which relationship implementation supports these requirements on its own?",
+      "question": "A developer has the following requirements: * Calculate the total amount on an Order. * Calculate the line amount for each Line Item based on quantity selected and price. * Move Line Items to a different Order if a Line Item is not in stock. Which relationship implementation supports these requirements on its own?",
       "options": {
         "A": "Line Item has a re-parentable master-detail field to Order.",
         "B": "Line Item has a re-parentable lookup field to Order.",
@@ -10027,10 +10071,12 @@
     },
     {
       "id": 499,
-      "question": "20 of 60 (=) Which two statements are true about using the @testSetup annotation in an Apex test class?",
+      "question": "Which two statements are true about using the @testSetup annotation in an Apex test class?",
       "options": {
         "A": "The @testSetup annotation is not supported when the @isTest(SeeAllData-True) annotation is used.",
-        "B": "A method defined with the @testSetup annotation executes once for each test method in the test class and counts towards system limits. CC. Records created in the test setup method cannot be updated in individual test methods. CD. Ina test setup method, test data is inserted once and made available for all test methods in the test class."
+        "B": "A method defined with the @testSetup annotation executes once for each test method in the test class.",
+        "C": "Test records created in a @testSetup method are available and rolled back for each test method.",
+        "D": "The @testSetup method is automatically invoked before each test method in the class."
       },
       "correct": "B",
       "isMulti": false,
@@ -10038,12 +10084,14 @@
       "questionVI": "20 trên 60 (=) Hai câu nào đúng về việc sử dụng annotation @testSetup trong lớp kiểm tra Apex?",
       "optionsVI": {
         "A": "Chú thích @testSetup không được hỗ trợ khi sử dụng annotation @isTest(SeeAllData-True).",
-        "B": "Một phương thức được xác định bằng annotation @testSetup sẽ thực thi một lần cho mỗi phương thức kiểm tra trong lớp kiểm tra và được tính vào giới hạn hệ thống. CC. Các Record được tạo trong Method thiết lập thử nghiệm không thể được cập nhật trong các Method thử nghiệm riêng lẻ. ĐĨA CD. Trong Method thiết lập thử nghiệm, dữ liệu thử nghiệm được chèn một lần và có sẵn cho tất cả các phương thức thử nghiệm trong lớp thử nghiệm."
+        "B": "Phương thức được xác định với annotation @testSetup thực thi một lần cho mỗi phương thức thử nghiệm trong lớp thử nghiệm.",
+        "C": "Các Record thử nghiệm được tạo trong phương thức @testSetup có sẵn và được khôi phục cho mỗi phương thức thử nghiệm.",
+        "D": "Phương thức @testSetup được gọi tự động trước mỗi phương thức thử nghiệm trong lớp."
       }
     },
     {
       "id": 500,
-      "question": "21 of 60 (Flow Builder uses an Apex action to provide additional information about multiple Contacts, stored in a custom class, ContactInfo. Which is the correct definition of the Apex method that gets the additional information?",
+      "question": "",
       "options": {
         "A": "@InvocableMethod(label=\"Additional Info\") public List<ContactInfo> getInfo(List<Id> contactIds) { /*implementation*/ }",
         "B": "@InvocableMethod (label='Additional Info') public static ContactInfo getInfo(Id contactid) { /*implementation*/ }",
@@ -10063,7 +10111,7 @@
     },
     {
       "id": 501,
-      "question": "22 of 60 (=) |Universal Containers has a large number of custom applications that were built using a third-party JavaScript framework and exposed using Visualforce pages. The company wants to update these applications to apply styling that resembles the look and feel of Lightning Experience. What should the developer do to fulfill the business request in the quickest and most effective manner?",
+      "question": "Universal Containers has a large number of custom applications that were built using a third-party JavaScript framework and exposed using Visualforce pages. The company wants to update these applications to apply styling that resembles the look and feel of Lightning Experience. What should the developer do to fulfill the business request in the quickest and most effective manner?",
       "options": {
         "A": "Rewrite all Visualforce pages as Lightning components.",
         "B": "Set the attribute enableLightning to true in the definition.",
@@ -10083,7 +10131,7 @@
     },
     {
       "id": 502,
-      "question": "23 of 60 (=) The following code snippet is executed by a Lightning web component in an environment with more than 2,000 lead records: @AuraEnabled public void static updateLeads () ( for (Lead thisLead : [SELECT Origin_c FROM Lead])({ thisLead.LeadSource = thisLead.Origin_c; update thisLead; } Which governor limit will likely be exceeded within the Apex transaction?",
+      "question": "The following code snippet is executed by a Lightning web component in an environment with more than 2,000 lead records: @AuraEnabled public void static updateLeads () ( for (Lead thisLead : [SELECT Origin_c FROM Lead])({ thisLead.LeadSource = thisLead.Origin_c; update thisLead; } Which governor limit will likely be exceeded within the Apex transaction?",
       "options": {
         "A": "Total number of DML statements issued",
         "B": "Total number of SOQL queries issued",
@@ -10103,7 +10151,7 @@
     },
     {
       "id": 503,
-      "question": "24 of 60 (=) What should a developer do to check the code coverage of a class after running all tests?",
+      "question": "What should a developer do to check the code coverage of a class after running all tests?",
       "options": {
         "A": "View the Class Test Percentage tab on the Apex Class list view in Salesforce Setup.",
         "B": "View the Code Coverage column in the list view on the Apex Classes page.",
@@ -10123,7 +10171,7 @@
     },
     {
       "id": 504,
-      "question": "25 of 60 (=) ‘A developer must troubleshoot to pinpoint the causes of performance issues when a custom page loads in their org. Which tool should the developer use to troubleshoot query performance?",
+      "question": "‘A developer must troubleshoot to pinpoint the causes of performance issues when a custom page loads in their org. Which tool should the developer use to troubleshoot query performance?",
       "options": {
         "A": "Visual Studio Code IDE",
         "B": "AppExchange",
@@ -10143,10 +10191,11 @@
     },
     {
       "id": 505,
-      "question": "28 of 60 (=) Which two characteristics are true for Lightning Web Component custom events?",
+      "question": "Which two characteristics are true for Lightning Web Component custom events?",
       "options": {
         "A": "By default a custom event only propagates to its immediate container and to its immediate child component.",
-        "B": "By default a custom event only propagates to it’s immediate container. CC. Data may be passed in the payload of a custom event using @wire decorated properties.",
+        "B": "By default a custom event only propagates to its immediate container.",
+        "C": "Data may be passed in the payload of a custom event using @wire decorated properties.",
         "D": "Data may be passed in the payload of a custom event using a property called detail."
       },
       "correct": "A,B",
@@ -10155,13 +10204,14 @@
       "questionVI": "28 trên 60 (=) Hai đặc điểm nào đúng đối với các sự kiện tùy chỉnh của Thành phần Lightning Web?",
       "optionsVI": {
         "A": "Theo mặc định, một sự kiện tùy chỉnh chỉ truyền đến vùng chứa trực tiếp và thành phần con trực tiếp của nó.",
-        "B": "Theo mặc định, một sự kiện tùy chỉnh chỉ truyền đến vùng chứa ngay lập tức của nó. CC. Dữ liệu có thể được truyền trong tải trọng của một sự kiện tùy chỉnh bằng cách sử dụng thuộc tính trang trí @wire.",
-        "D": "Dữ liệu có thể được truyền trong tải trọng của một sự kiện tùy chỉnh bằng cách sử dụng thuộc tính có tên là chi tiết."
+        "B": "Theo mặc định, một sự kiện tùy chỉnh chỉ truyền đến vùng chứa trực tiếp của nó.",
+        "C": "Dữ liệu có thể được truyền trong tải trọng của sự kiện tùy chỉnh bằng thuộc tính trang trí @wire.",
+        "D": "Dữ liệu có thể được truyền trong tải trọng của sự kiện tùy chỉnh bằng thuộc tính có tên là detail."
       }
     },
     {
       "id": 506,
-      "question": "30 of 60 (=) What is an example of a polymorphic lookup field in Salesforce?",
+      "question": "What is an example of a polymorphic lookup field in Salesforce?",
       "options": {
         "A": "The Parentld field on the standard Account object",
         "B": "The Whatld field on the standard Event object",
@@ -10201,7 +10251,7 @@
     },
     {
       "id": 508,
-      "question": "32 of 60 (=) How can a developer check the test coverage of autolaunched Flows before deploying them in a change set?",
+      "question": "How can a developer check the test coverage of autolaunched Flows before deploying them in a change set?",
       "options": {
         "A": "Use the Flow Properties page.",
         "B": "Use SOQL and the Tooling API.",
@@ -10221,11 +10271,13 @@
     },
     {
       "id": 509,
-      "question": "34 of 60 (=) Which three steps allow a custom Scalable Vector Graphic (SVG) to be included in a Lightning web component?",
+      "question": "Which three steps allow a custom Scalable Vector Graphic (SVG) to be included in a Lightning web component?",
       "options": {
         "A": "Import the static resource and provide a JavaScript property for it.",
         "B": "Reference the property in the HTML template.",
-        "C": "Upload the SVG asa static resource. CD. Reference the import in the HTML template. CE. Import the SVG as a content asset file."
+        "C": "Upload the SVG as a static resource.",
+        "D": "Reference the import in the HTML template.",
+        "E": "Import the SVG as a content asset file."
       },
       "correct": "B,C",
       "isMulti": true,
@@ -10234,12 +10286,14 @@
       "optionsVI": {
         "A": "Nhập tài nguyên tĩnh và cung cấp thuộc tính JavaScript cho nó.",
         "B": "Tham chiếu thuộc tính trong mẫu HTML.",
-        "C": "Tải lên tài nguyên tĩnh dưới dạng SVG. ĐĨA CD. Tham chiếu việc nhập trong mẫu HTML. CE. Nhập SVG dưới dạng tệp nội dung."
+        "C": "Tải lên SVG như một tài nguyên tĩnh.",
+        "D": "Tham chiếu import trong mẫu HTML.",
+        "E": "Nhập SVG dưới dạng file nội dung tài sản."
       }
     },
     {
       "id": 510,
-      "question": "37 of 60 (=) Accompany decides to implement a new process where every time an Opportunity is created, a follow up Task should be created and assigned to the Opportunity Owner. What is the most efficient way for a developer to implement this?",
+      "question": "Accompany decides to implement a new process where every time an Opportunity is created, a follow up Task should be created and assigned to the Opportunity Owner. What is the most efficient way for a developer to implement this?",
       "options": {
         "A": "Record-triggered flow on Opportunity",
         "B": "Apex trigger on Task",
@@ -10259,11 +10313,12 @@
     },
     {
       "id": 511,
-      "question": "38 of 60 (=) A developer is tasked to perform a security review of the Contact Search Apex class that exists in the system. Within the class, the developer identifies the following method as a security threat: List<Contact> performSearch (String lastName) { return Database.query('SELECT Id, FirstName, LastName FROM Contact WHERE LastName Like %'+lastNamet'8\"); ) What are two ways the developer can update the method to prevent a SOQL injection attack?",
+      "question": "A developer is tasked to perform a security review of the Contact Search Apex class that exists in the system. Within the class, the developer identifies the following method as a security threat: List<Contact> performSearch (String lastName) { return Database.query('SELECT Id, FirstName, LastName FROM Contact WHERE LastName Like %'+lastNamet'8\"); ) What are two ways the developer can update the method to prevent a SOQL injection attack?",
       "options": {
         "A": "Use variable binding and replace the dynamic query with a static SOQL.",
-        "B": "Use the escapeSingleQuotes method to sanitize the parameter before its use. CC. Use the @ReadOn1y annotation and the with sharing keyword on the class.",
-        "D": "Use a regular expression expression on the parameter to remove special characters."
+        "B": "Use the escapeSingleQuotes method to sanitize the parameter before its use.",
+        "C": "Use the @ReadOnly annotation and the with sharing keyword on the class.",
+        "D": "Use a regular expression on the parameter to remove special characters."
       },
       "correct": "B",
       "isMulti": false,
@@ -10271,13 +10326,14 @@
       "questionVI": "38 trên 60 (=) Nhà phát triển có nhiệm vụ thực hiện đánh giá bảo mật của Apex Class Tìm kiếm Liên hệ tồn tại trong hệ thống. Trong lớp này, nhà phát triển xác định phương thức sau đây là mối đe dọa bảo mật: List<contact> performanceSearch (String LastName) { return Database.query('SELECT Id, FirstName, LastName FROM Contact WHERE LastName Like %'+lastNamet'8\"); ) Hai cách mà nhà phát triển có thể cập nhật phương thức để ngăn chặn cuộc tấn công tiêm nhiễm SOQL là gì?",
       "optionsVI": {
         "A": "Sử dụng liên kết biến và thay thế truy vấn động bằng SOQL tĩnh.",
-        "B": "Sử dụng phương thức escapeSingleQuotes để vệ sinh tham số trước khi sử dụng. CC. Sử dụng annotation @ReadOn1y và từ khóa chia sẻ trên lớp.",
-        "D": "Sử dụng biểu thức biểu thức chính quy trên tham số để xóa các ký tự đặc biệt."
+        "B": "Sử dụng phương thức escapeSingleQuotes để vệ sinh tham số trước khi sử dụng.",
+        "C": "Sử dụng annotation @ReadOnly và từ khóa with sharing trên lớp.",
+        "D": "Sử dụng biểu thức chính quy trên tham số để xóa các ký tự đặc biệt."
       }
     },
     {
       "id": 512,
-      "question": "39 of 60 ‘A developer wants to improve runtime performance of Apex calls by caching results on the client. What is the most efficient way to implement this and follow best practices?",
+      "question": "",
       "options": {
         "A": "Seta cookie in the browser for use upon return to the page.",
         "B": "Decorate the server-side method with @AuraEnabled(cacheable=true).",
@@ -10297,7 +10353,7 @@
     },
     {
       "id": 513,
-      "question": "40 of 60 (=) In the following example, which sharing context will myMethod execute when it is invoked? public Class myClass { public void myMethod() { /* implementation */ } }",
+      "question": "In the following example, which sharing context will myMethod execute when it is invoked? public Class myClass { public void myMethod() { /* implementation */ } }",
       "options": {
         "A": "Sharing rules will be enforced by the instantiating class.",
         "B": "Sharing rules will not be enforced for the running user.",
@@ -10317,10 +10373,12 @@
     },
     {
       "id": 514,
-      "question": "43 of 60 (=) Which two Agentforce limitations should a developer consider when building an agent?",
+      "question": "Which two Agentforce limitations should a developer consider when building an agent?",
       "options": {
         "A": "Custom actions that reference an Apex class or flow support only primitive data types.",
-        "B": "The Agent API has a 90-second timeout. CC. Inbound messages sent via messaging channels have character limits. CD. Version control is supported for agents."
+        "B": "The Agent API has a 90-second timeout.",
+        "C": "Inbound messages sent via messaging channels have character limits.",
+        "D": "Custom actions cannot reference Apex classes directly."
       },
       "correct": "B",
       "isMulti": false,
@@ -10328,7 +10386,9 @@
       "questionVI": "43 trên 60 (=) Hai hạn chế nào của Agentforce mà nhà phát triển nên cân nhắc khi xây dựng một đại lý?",
       "optionsVI": {
         "A": "Các hành động tùy chỉnh tham chiếu đến lớp hoặc Flow Apex chỉ hỗ trợ các loại dữ liệu nguyên thủy.",
-        "B": "API tác nhân có thời gian chờ là 90 giây. CC. Tin nhắn gửi đến được gửi qua các kênh nhắn tin có giới hạn ký tự. ĐĨA CD. Kiểm soát phiên bản được hỗ trợ cho các đại lý."
+        "B": "API Agent có thời gian chờ 90 giây.",
+        "C": "Tin nhắn đến được gửi qua các kênh nhắn tin có giới hạn ký tự.",
+        "D": "Các hành động tùy chỉnh không thể tham chiếu trực tiếp đến Apex class."
       }
     },
     {
@@ -10353,7 +10413,7 @@
     },
     {
       "id": 516,
-      "question": "50 of 60 (=) (What should a developer use to fix a Lightning web component bug in a sandbox?",
+      "question": "(What should a developer use to fix a Lightning web component bug in a sandbox?",
       "options": {
         "A": "VS Code",
         "B": "Execute Anonymous",
@@ -10373,7 +10433,7 @@
     },
     {
       "id": 517,
-      "question": "51 of 60 (=) (A developer creates a custom exception as shown below: public class ParityException extends Exception {} What are two ways the developer can fire the exception in Apex?",
+      "question": "(A developer creates a custom exception as shown below: public class ParityException extends Exception {} What are two ways the developer can fire the exception in Apex?",
       "options": {
         "A": "throw new ParityException('parity does not match\");",
         "B": "throw new ParityException();",
@@ -10393,7 +10453,7 @@
     },
     {
       "id": 518,
-      "question": "53 of 60 (=) The sales management team at Universal Containers requires that the Lead Source field of the Lead record be populated when a Lead is converted. What should be done to ensure that a user populates the Lead Source field prior to converting a Lead?",
+      "question": "The sales management team at Universal Containers requires that the Lead Source field of the Lead record be populated when a Lead is converted. What should be done to ensure that a user populates the Lead Source field prior to converting a Lead?",
       "options": {
         "A": "Create an after trigger on Lead.",
         "B": "Use a formula field.",
@@ -10413,7 +10473,7 @@
     },
     {
       "id": 519,
-      "question": "54 of 60 (=) |Cloud Kicks Fitness, an ISV Salesforce partner, is developing a managed package application. One of the application modules allows the user to calculate body fat using the Apex class, BodyFat, and its method, calculateBodyFat (). The product owner wants to ensure this method is accessible by the consumer of the application when developing customizations outside the ISV's package namespace. Which approach should a developer take to ensure calculateBodyFat () is accessible outside the package namespace?",
+      "question": "Cloud Kicks Fitness, an ISV Salesforce partner, is developing a managed package application. One of the application modules allows the user to calculate body fat using the Apex class, BodyFat, and its method, calculateBodyFat (). The product owner wants to ensure this method is accessible by the consumer of the application when developing customizations outside the ISV's package namespace. Which approach should a developer take to ensure calculateBodyFat () is accessible outside the package namespace?",
       "options": {
         "A": "Declare the class and method using the public access modifier.",
         "B": "Declare the class as public and use the global access modifier on the method.",
@@ -10453,10 +10513,11 @@
     },
     {
       "id": 521,
-      "question": "57 of 60 (=) Which two actions may cause triggers to fire?",
+      "question": "Which two actions may cause triggers to fire?",
       "options": {
-        "A": "Updates to Feedltem",
-        "B": "Renaming or replacing a picklist entry OC. Cascading delete operations",
+        "A": "Updates to FeedItem",
+        "B": "Renaming or replacing a picklist entry",
+        "C": "Cascading delete operations",
         "D": "Changing a user's default division when the transfer division option is checked"
       },
       "correct": "B",
@@ -10464,14 +10525,15 @@
       "explanation": "💡 Giải thích:\nCâu trả lời đúng là B: Đổi tên hoặc thay thế mục nhập danh sách chọn OC. Hoạt động xóa xếp tầng. Đây là hành vi tiêu chuẩn của Salesforce.",
       "questionVI": "57 trên 60 (=) Hai hành động nào có thể khiến bộ kích hoạt kích hoạt?",
       "optionsVI": {
-        "A": "Cập nhật Feedltem",
-        "B": "Đổi tên hoặc thay thế mục nhập danh sách chọn OC. Hoạt động xóa xếp tầng",
+        "A": "Cập nhật FeedItem",
+        "B": "Đổi tên hoặc thay thế mục nhập danh sách chọn",
+        "C": "Hoạt động xóa xếp tầng",
         "D": "Thay đổi cách chia mặc định của người dùng khi tùy chọn chia chuyển được chọn"
       }
     },
     {
       "id": 522,
-      "question": "58 of 60 (=) |A developer is using Agentforce Dev Assistant and noticed that the output from their prompt resembles proprietary code. Which model training considerations should the developer be aware of when utilizing the extension?",
+      "question": "A developer is using Agentforce Dev Assistant and noticed that the output from their prompt resembles proprietary code. Which model training considerations should the developer be aware of when utilizing the extension?",
       "options": {
         "A": "Dev Assistant can reference the developer's prior prompts to generate output in near real time.",
         "B": "Dev Assistant can reference other developers’ code and train the model in near real time.",
@@ -10491,11 +10553,12 @@
     },
     {
       "id": 523,
-      "question": "60 of 60 ‘A developer receives an error when compiling the following code. switch on sobject { when Account a, Contact ¢ { System.debug(\"account ' + a)? System.debug('contact ' +c)? } when null { System.debug('null\"); } when else { System.debug (\"default\") + } ) ‘What is the error?",
+      "question": "‘A developer receives an error when compiling the following code. switch on sobject { when Account a, Contact ¢ { System.debug(\"account ' + a)? System.debug('contact ' +c)? } when null { System.debug('null\"); } when else { System.debug (\"default\") + } ) ‘What is the error?",
       "options": {
         "A": "Only one sObject type per when block can be used.",
         "B": "There is incompatible variable binding.",
-        "C": "Switch statements cannot contain multiple when values. EXAM: Salesforce Certified Platform Developer GRADE: Pass The report below shows the percentage of questions in each sect Certified Platform Developer exam. You will receive this informati via My Dashboard in Trailhead Academy. SECTION NAME: Developer Fundamentals Process Automation and Logic User Interface Testing, Debugging, and Deployment"
+        "C": "Switch statements cannot contain multiple when values.",
+        "D": "The sObject type is not supported in switch statements."
       },
       "correct": "A",
       "isMulti": false,
@@ -10504,7 +10567,8 @@
       "optionsVI": {
         "A": "Chỉ có một loại sObject cho mỗi khối khi có thể được sử dụng.",
         "B": "Có ràng buộc biến không tương thích.",
-        "C": "Câu lệnh switch không thể chứa nhiều giá trị when. BÀI THI: Nhà phát triển nền tảng được chứng nhận của Salesforce LỚP: Đạt Báo cáo bên dưới hiển thị tỷ lệ phần trăm câu hỏi trong kỳ thi Nhà phát triển nền tảng được chứng nhận của từng phần. Bạn sẽ nhận được thông tin này qua Bảng điều khiển của tôi trong Học viện Trailhead. TÊN PHẦN: Nguyên tắc cơ bản dành cho nhà phát triển Tự động hóa quy trình và kiểm tra giao diện người dùng logic, gỡ lỗi và triển khai"
+        "C": "Câu lệnh Switch không thể chứa nhiều giá trị when.",
+        "D": "Loại sObject không được hỗ trợ trong câu lệnh switch."
       }
     },
     {
