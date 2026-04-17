@@ -5,6 +5,9 @@
 
 const isDev = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
 
+// Cache để lưu kết quả AI, tránh gọi lại API khi mở lại popup cho cùng 1 câu hỏi
+const aiResponseCache = {};
+
 /**
  * Mở popup AI Expert và stream câu trả lời realtime
  * @param {Object} question - câu hỏi hiện tại { question, options, questionVI, ... }
@@ -15,6 +18,17 @@ export async function openAIExpertPopup(question) {
   
   const contentEl = document.getElementById('ai-expert-content');
   const statusEl = document.getElementById('ai-expert-status');
+  
+  // Dùng nội dung câu hỏi làm key cache
+  const cacheKey = question.question.trim();
+  
+  if (aiResponseCache[cacheKey]) {
+    // Nếu đã có cache, hiển thị luôn không cần gọi API
+    statusEl.textContent = '✅ Phân tích hoàn tất (Tải từ bộ nhớ tạm)';
+    statusEl.className = 'ai-expert__status done';
+    contentEl.innerHTML = formatAIResponse(aiResponseCache[cacheKey]);
+    return;
+  }
   
   // Build prompt
   const prompt = buildPrompt(question);
@@ -110,6 +124,11 @@ export async function openAIExpertPopup(question) {
 
     statusEl.textContent = '✅ Phân tích hoàn tất';
     statusEl.className = 'ai-expert__status done';
+    
+    // Save to cache
+    if (fullText) {
+      aiResponseCache[cacheKey] = fullText;
+    }
     
     // Final render with complete text
     contentEl.innerHTML = formatAIResponse(fullText);
