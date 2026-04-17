@@ -436,7 +436,7 @@ function renderNavbar() {
   return `
     <nav class="navbar">
       <a class="navbar__logo" onclick="goHome()" style="gap:12px;">
-        <img src="/logo.png" style="height:36px; border-radius:6px; object-fit:contain; background:#fff; padding:2px;" alt="SUSHI Logo" onerror="this.outerHTML='<div class=\\'navbar__logo-icon\\' style=\\'background:#fff;color:var(--sf-navy);font-size:20px;\\'>🍣</div>'"/>
+        <img src="/logo.jpg" style="height:36px; border-radius:6px; object-fit:contain; background:#fff; padding:2px;" alt="SUSHI Logo" onerror="this.outerHTML='<div class=\\'navbar__logo-icon\\' style=\\'background:#fff;color:var(--sf-navy);font-size:20px;\\'>🍣</div>'"/>
         <span style="letter-spacing:1px;font-weight:800;font-size:18px;">SUSHI<span style="color:var(--sf-orange);font-weight:600;font-size:14px;margin-left:6px;letter-spacing:0;">LUYỆN ĐỀ THI</span></span>
       </a>
       <div class="navbar__actions">${authHTML}</div>
