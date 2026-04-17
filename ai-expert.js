@@ -181,29 +181,36 @@ Hãy trả lời ĐÚNG theo thứ tự sau:
 }
 
 function formatAIResponse(text) {
-  // Step 1: Extract and protect code blocks (```...```) trước khi xử lý markdown khác
+  // Step 1: Trích xuất an toàn Code block (kể cả khi đang stream chưa có dấu đóng ```)
   const codeBlocks = [];
-  let processed = text.replace(/```(\w*)\n?([\s\S]*?)```/g, (match, lang, code) => {
+  let processed = text.replace(/```([^\n]*)\n?([\s\S]*?)(?:```|$)/g, (match, lang, code) => {
     const placeholder = `__CODE_BLOCK_${codeBlocks.length}__`;
-    const langLabel = lang ? `<span class="ai-code-lang">${lang}</span>` : '';
-    codeBlocks.push(`<div class="ai-code-block">${langLabel}<pre><code>${code.trim().replace(/</g, '&lt;').replace(/>/g, '&gt;')}</code></pre></div>`);
+    const langLabel = lang.trim() ? `<span class="ai-code-lang">${lang.trim()}</span>` : '';
+    codeBlocks.push(`<div class="ai-code-block">${langLabel}<pre><code>${code.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</code></pre></div>`);
     return placeholder;
   });
 
   // Step 2: Convert markdown formatting
   let html = processed
-    // Headers
+    // Headers 3
+    .replace(/### (.*)/g, '<h4 class="ai-section-title" style="font-size:14px;margin-top:12px;">$1</h4>')
+    // Headers 2
     .replace(/## (.*)/g, '<h3 class="ai-section-title">$1</h3>')
     // Bold
     .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-    // Inline code (single backtick)
+    // Inline code (mã ngắn)
     .replace(/`([^`]+)`/g, '<code class="ai-inline-code">$1</code>')
+    // List item (dấu sao hoặc gạch ngang đầu dòng)
+    .replace(/(?:^|\n)[*-] (.*)/g, '\n<li>$1</li>')
     // Line breaks
     .replace(/\n/g, '<br>')
-    // Clean up double breaks
-    .replace(/<br><br>/g, '<div style="height:8px;"></div>');
+    // Gộp các list item vào ul
+    .replace(/(<li>.*<\/li>)/g, '<ul class="ai-list">$1</ul>')
+    .replace(/<\/ul><br><ul class="ai-list">/g, '') // nối các thẻ ul liền kề
+    // Xóa thẻ break thừa
+    .replace(/(<br>){2,}/g, '<div style="height:12px;"></div>');
 
-  // Step 3: Restore code blocks
+  // Step 3: Khôi phục Code blocks
   codeBlocks.forEach((block, i) => {
     html = html.replace(`__CODE_BLOCK_${i}__`, block);
   });
@@ -425,6 +432,15 @@ function getPopupStyles() {
       background: transparent;
       padding: 0;
       border-radius: 0;
+    }
+
+    .ai-expert__content .ai-list {
+      padding-left: 20px;
+      margin: 8px 0;
+    }
+    
+    .ai-expert__content .ai-list li {
+      margin-bottom: 4px;
     }
 
     .ai-response-text {
