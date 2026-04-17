@@ -162,18 +162,32 @@ Hãy trả lời ĐÚNG theo thứ tự sau:
 }
 
 function formatAIResponse(text) {
-  // Convert markdown-like formatting to HTML
-  let html = text
+  // Step 1: Extract and protect code blocks (```...```) trước khi xử lý markdown khác
+  const codeBlocks = [];
+  let processed = text.replace(/```(\w*)\n?([\s\S]*?)```/g, (match, lang, code) => {
+    const placeholder = `__CODE_BLOCK_${codeBlocks.length}__`;
+    const langLabel = lang ? `<span class="ai-code-lang">${lang}</span>` : '';
+    codeBlocks.push(`<div class="ai-code-block">${langLabel}<pre><code>${code.trim().replace(/</g, '&lt;').replace(/>/g, '&gt;')}</code></pre></div>`);
+    return placeholder;
+  });
+
+  // Step 2: Convert markdown formatting
+  let html = processed
     // Headers
     .replace(/## (.*)/g, '<h3 class="ai-section-title">$1</h3>')
     // Bold
     .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-    // Inline code
-    .replace(/`([^`]+)`/g, '<code>$1</code>')
+    // Inline code (single backtick)
+    .replace(/`([^`]+)`/g, '<code class="ai-inline-code">$1</code>')
     // Line breaks
     .replace(/\n/g, '<br>')
     // Clean up double breaks
     .replace(/<br><br>/g, '<div style="height:8px;"></div>');
+
+  // Step 3: Restore code blocks
+  codeBlocks.forEach((block, i) => {
+    html = html.replace(`__CODE_BLOCK_${i}__`, block);
+  });
 
   return `<div class="ai-response-text">${html}</div>`;
 }
@@ -352,12 +366,46 @@ function getPopupStyles() {
     .ai-expert__content strong {
       color: #1e293b;
     }
-    .ai-expert__content code {
+    .ai-expert__content .ai-inline-code {
       background: #f1f5f9;
       padding: 2px 6px;
       border-radius: 4px;
       font-size: 13px;
       color: #7c3aed;
+      font-family: monospace;
+    }
+
+    .ai-expert__content .ai-code-block {
+      background: #1e293b;
+      border-radius: 8px;
+      margin: 12px 0;
+      overflow: hidden;
+      font-family: monospace;
+      font-size: 13px;
+    }
+
+    .ai-expert__content .ai-code-block .ai-code-lang {
+      display: block;
+      background: #0f172a;
+      color: #94a3b8;
+      padding: 6px 12px;
+      font-size: 11px;
+      text-transform: uppercase;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    .ai-expert__content .ai-code-block pre {
+      margin: 0;
+      padding: 12px;
+      overflow-x: auto;
+    }
+
+    .ai-expert__content .ai-code-block pre code {
+      color: #e2e8f0;
+      background: transparent;
+      padding: 0;
+      border-radius: 0;
     }
 
     .ai-response-text {
