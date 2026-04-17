@@ -2,7 +2,6 @@
 export const config = { runtime: 'edge' };
 
 export default async function handler(req) {
-  // CORS
   if (req.method === 'OPTIONS') {
     return new Response(null, {
       status: 200,
@@ -18,16 +17,15 @@ export default async function handler(req) {
     return new Response(JSON.stringify({ error: 'Method not allowed' }), { status: 405 });
   }
 
-  // Extract model from URL: /api/ai/models/gemini-flash-latest
   const url = new URL(req.url);
-  const pathParts = url.pathname.replace('/api/ai/models/', '').split('/');
-  const modelName = pathParts[0] || 'gemini-flash-latest';
-
-  const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:streamGenerateContent?alt=sse`;
+  // /api/ai/models/gemini-flash-latest:streamGenerateContent?alt=sse
+  // → models/gemini-flash-latest:streamGenerateContent?alt=sse
+  const geminiPath = url.pathname.replace('/api/ai/', '');
+  const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/${geminiPath}${url.search}`;
 
   try {
     const body = await req.json();
-    
+
     const geminiRes = await fetch(geminiUrl, {
       method: 'POST',
       headers: {
@@ -39,20 +37,25 @@ export default async function handler(req) {
 
     if (!geminiRes.ok) {
       const errText = await geminiRes.text();
-      return new Response(errText, { status: geminiRes.status });
+      return new Response(errText, {
+        status: geminiRes.status,
+        headers: { 'Access-Control-Allow-Origin': '*' }
+      });
     }
 
-    // Stream trực tiếp từ Gemini → Client (zero buffering)
+    // Stream trực tiếp từ Gemini → Client
     return new Response(geminiRes.body, {
       status: 200,
       headers: {
         'Content-Type': 'text/event-stream',
         'Cache-Control': 'no-cache',
-        'Connection': 'keep-alive',
         'Access-Control-Allow-Origin': '*'
       }
     });
   } catch (err) {
-    return new Response(JSON.stringify({ error: err.message }), { status: 500 });
+    return new Response(JSON.stringify({ error: err.message }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+    });
   }
 }
