@@ -1,13 +1,17 @@
 // ============================================
 // SALESFORCE EXAM PRACTICE - MAIN APP
+// Connected to Salesforce Database via REST API
 // ============================================
 import { onAuthChange, loginWithGoogle, logout, getCurrentUser, getUserProfile, saveUserProfile, saveScore, getAllLeaderboard } from './firebase.js';
+import { loadCertFromSalesforce } from './salesforce-api.js';
+import { openAIExpertPopup } from './ai-expert.js';
 
 let state = {
   screen: 'home',       // home | login | mode | exam | results | leaderboard
   lang: 'vi',           // vi | en
-  certData: null,       // loaded JSON
+  certData: null,       // loaded from Salesforce DB or fallback JSON
   certId: 'pd1',
+  dataSource: 'loading', // 'salesforce' | 'json' | 'loading'
   mode: null,            // demo | full | practice
   questions: [],         // current exam questions
   currentIndex: 0,
@@ -25,10 +29,22 @@ let state = {
 
 const app = document.getElementById('app');
 
-// ========== DATA ==========
+// ========== DATA (Salesforce Database → Fallback JSON) ==========
 async function loadCert(certId) {
+  // Ưu tiên 1: Lấy data trực tiếp từ Salesforce Database qua REST API
+  const sfData = await loadCertFromSalesforce(certId);
+  if (sfData && sfData.questions && sfData.questions.length > 0) {
+    state.certData = sfData;
+    state.dataSource = 'salesforce';
+    console.log(`🔗 Data source: SALESFORCE DATABASE (${sfData.totalQuestions} questions)`);
+    return state.certData;
+  }
+
+  // Ưu tiên 2: Fallback về file JSON tĩnh nếu API không khả dụng
+  console.log('📁 Data source: LOCAL JSON (fallback)');
   const res = await fetch(`/data/${certId}.json`);
   state.certData = await res.json();
+  state.dataSource = 'json';
   return state.certData;
 }
 
@@ -52,6 +68,11 @@ function renderHome() {
     <section class="hero">
       <div class="hero__content fade-in">
         <div class="hero__badge">✨ Miễn phí 100% • ${state.user ? `Xin chào, ${state.userProfile?.username || 'User'}!` : 'Đăng nhập để lưu điểm'}</div>
+        ${state.dataSource === 'salesforce' 
+          ? '<div style="display:inline-block;background:linear-gradient(135deg,#04844b,#0b8953);color:#fff;padding:4px 14px;border-radius:20px;font-size:11px;font-weight:600;margin-bottom:8px;letter-spacing:0.5px;">🔗 Live Database — Salesforce Connected</div>'
+          : state.dataSource === 'json' 
+            ? '<div style="display:inline-block;background:#ff6600;color:#fff;padding:4px 14px;border-radius:20px;font-size:11px;font-weight:600;margin-bottom:8px;">📁 Offline Mode — Static JSON</div>'
+            : ''}
         <h1>Luyện Thi Chứng Chỉ<br/><span>Salesforce</span></h1>
         <p class="hero__subtitle">Hệ thống ôn thi trắc nghiệm với hơn 500 câu hỏi chuẩn, hỗ trợ song ngữ Anh - Việt, chấm điểm tự động và giải thích chi tiết từng câu.</p>
       </div>
@@ -265,6 +286,7 @@ function renderExam() {
           <button class="btn btn--ghost" onclick="prevQuestion()" ${state.currentIndex === 0 ? 'disabled' : ''}>← Trước</button>
           ${practiceBtn}
           ${hintBtn}
+          <button class="btn btn--ai" onclick="askAIExpert()" style="margin-left:8px;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;border:none;font-weight:600;">🧠 Gợi ý từ chuyên gia</button>
         </div>
         <div class="exam-nav__right">
           ${state.currentIndex < total - 1 
@@ -327,13 +349,15 @@ function renderResults() {
       hintHTML = `<div class="explanation-box">${viBlock}${q.explanation ? `<h4>💡 Giải thích</h4><p>${cleanExplanation(q.explanation)}</p>` : ''}</div>`;
     }
 
+    const skipped = selected.length === 0;
     return `
-      <div class="question-card fade-in" style="margin-bottom:16px;">
+      <div class="question-card fade-in" style="margin-bottom:16px;" id="review-q-${i}">
         <div class="question-card__body" style="padding:24px;">
           <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
             <span style="font-size:13px;font-weight:600;color:${isCorrect ? 'var(--sf-success)' : 'var(--sf-error)'};">
               ${isCorrect ? '✅ Correct' : '❌ Incorrect'} — Question ${i + 1}
             </span>
+            ${skipped ? '<span style="font-size:12px;color:var(--gray-400);background:var(--gray-100);padding:2px 10px;border-radius:10px;">⚠️ Chưa trả lời</span>' : ''}
           </div>
           <div class="question-text" style="font-size:14px;margin-bottom:16px;">${formatCodeInText(qText)}</div>
           <div class="options-list" style="gap:6px;">
@@ -606,7 +630,15 @@ window.selectCert = async function(certId) {
 
 window.selectMode = function(mode) {
   state.mode = mode;
-  render();
+  // Partial update: chỉ cập nhật trạng thái selected của mode cards, không re-render toàn trang
+  document.querySelectorAll('.mode-card').forEach(card => card.classList.remove('selected'));
+  const cards = document.querySelectorAll('.mode-card');
+  if (mode === 'demo' && cards[0]) cards[0].classList.add('selected');
+  if (mode === 'full' && cards[1]) cards[1].classList.add('selected');
+  if (mode === 'practice' && cards[2]) cards[2].classList.add('selected');
+  // Enable start button
+  const startBtn = document.querySelector('.btn--primary[onclick="startExam()"]');
+  if (startBtn) startBtn.removeAttribute('disabled');
 }
 
 window.goHome = function() {
@@ -636,6 +668,7 @@ window.startExam = function() {
   state.answers = {};
   state.submitted = false;
   state.practiceRevealed = {};
+  state.hintShown = {};  // Reset hint khi bắt đầu bài thi mới
   state.timerStart = Date.now();
 
   // Timer for full mode
@@ -773,6 +806,7 @@ window.prevQuestion = function() {
   if (state.currentIndex > 0) {
     state.currentIndex--;
     render();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 }
 
@@ -780,12 +814,14 @@ window.nextQuestion = function() {
   if (state.currentIndex < state.questions.length - 1) {
     state.currentIndex++;
     render();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 }
 
 window.goToQuestion = function(i) {
   state.currentIndex = i;
   render();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 window.revealAnswer = function() {
@@ -800,6 +836,11 @@ window.toggleHint = function() {
   if (!state.hintShown) state.hintShown = {};
   state.hintShown[state.currentIndex] = !state.hintShown[state.currentIndex];
   updateExamPartial();
+}
+
+window.askAIExpert = function() {
+  const q = state.questions[state.currentIndex];
+  if (q) openAIExpertPopup(q);
 }
 
 window.submitExam = async function() {

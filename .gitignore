@@ -17,6 +17,9 @@ dist/
 dist-ssr/
 *.local
 
+# Environment (Salesforce credentials - NEVER commit)
+.env
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

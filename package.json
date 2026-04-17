@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "refresh-token": "TOKEN=$(sf org display --target-org nampdt@fpt.com --json 2>/dev/null | node -e \"process.stdin.on('data',d=>{const r=JSON.parse(d).result;console.log(r.accessToken)})\") && sed -i '' \"s|SF_ACCESS_TOKEN=.*|SF_ACCESS_TOKEN=$TOKEN|\" .env && echo '✅ Token refreshed!'"
   },
   "devDependencies": {
     "vite": "^6.0.0"
