@@ -767,7 +767,8 @@ function updateExamPartial() {
     }
     const hintBtnLabel = isHintShown ? 'Ẩn gợi ý' : '💡 Gợi ý';
     const hintBtn = state.mode !== 'practice' ? `<button class="btn btn--ghost" onclick="toggleHint()" style="margin-left:8px;">${hintBtnLabel}</button>` : '';
-    navLeft.innerHTML = `<button class="btn btn--ghost" onclick="prevQuestion()" ${state.currentIndex === 0 ? 'disabled' : ''}>← Trước</button>${practiceBtn}${hintBtn}`;
+    const aiBtn = `<button class="btn btn--ai" onclick="askAIExpert()" style="margin-left:8px;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;border:none;font-weight:600;">🧠 Gợi ý từ chuyên gia</button>`;
+    navLeft.innerHTML = `<button class="btn btn--ghost" onclick="prevQuestion()" ${state.currentIndex === 0 ? 'disabled' : ''}>← Trước</button>${practiceBtn}${hintBtn}${aiBtn}`;
   }
 
   // Update question navigator dots
