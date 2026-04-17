@@ -73,8 +73,8 @@ function renderHome() {
           : state.dataSource === 'json' 
             ? '<div style="display:inline-block;background:#ff6600;color:#fff;padding:4px 14px;border-radius:20px;font-size:11px;font-weight:600;margin-bottom:8px;">📁 Offline Mode — Static JSON</div>'
             : ''}
-        <h1>Luyện Thi Chứng Chỉ<br/><span>Salesforce</span></h1>
-        <p class="hero__subtitle">Hệ thống ôn thi trắc nghiệm với hơn 500 câu hỏi chuẩn, hỗ trợ song ngữ Anh - Việt, chấm điểm tự động và giải thích chi tiết từng câu.</p>
+        <h1>SUSHI - Luyện Đề Thi<br/><span style="font-size:0.8em;opacity:0.9;">Chinh phục mọi kỳ thi</span></h1>
+        <p class="hero__subtitle">Hệ thống luyện thi trắc nghiệm thông minh, nâng cao kỹ năng phản xạ và ghi nhớ sâu với bộ công cụ AI hỗ trợ 24/7.</p>
       </div>
     </section>
     <div class="cert-grid">
@@ -435,9 +435,9 @@ function renderNavbar() {
   }
   return `
     <nav class="navbar">
-      <a class="navbar__logo" onclick="goHome()">
-        <div class="navbar__logo-icon">☁️</div>
-        SF Exam Practice
+      <a class="navbar__logo" onclick="goHome()" style="gap:12px;">
+        <img src="/logo.png" style="height:36px; border-radius:6px; object-fit:contain; background:#fff; padding:2px;" alt="SUSHI Logo" onerror="this.outerHTML='<div class=\\'navbar__logo-icon\\' style=\\'background:#fff;color:var(--sf-navy);font-size:20px;\\'>🍣</div>'"/>
+        <span style="letter-spacing:1px;font-weight:800;font-size:18px;">SUSHI<span style="color:var(--sf-orange);font-weight:600;font-size:14px;margin-left:6px;letter-spacing:0;">LUYỆN ĐỀ THI</span></span>
       </a>
       <div class="navbar__actions">${authHTML}</div>
     </nav>
