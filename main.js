@@ -165,7 +165,7 @@ function renderExam() {
   const multiHint = q.isMulti ? `<div class="multi-hint">✎ Select multiple answers</div>` : '';
 
   // Build options
-  const optKeys = Object.keys(q.options);
+  const optKeys = Object.keys(q.options).sort();
   const optionsHTML = optKeys.map(key => {
     const optText = formatCodeInText(q.options[key]); // Always English
     const isSelected = selectedAnswers.includes(key);
@@ -201,7 +201,7 @@ function renderExam() {
   if (isHintShown || isPracticeRevealed) {
     // Build Vietnamese translation section
     const viQuestion = q.questionVI && q.questionVI !== q.question ? formatCodeInText(q.questionVI) : '';
-    const viOptions = Object.keys(q.optionsVI || {}).map(key => {
+    const viOptions = Object.keys(q.optionsVI || {}).sort().map(key => {
       const viOpt = q.optionsVI[key];
       if (viOpt && viOpt !== q.options[key]) {
         return `<div style="padding:4px 0;">${key}. ${formatCodeInText(viOpt)}</div>`;
@@ -316,7 +316,7 @@ function renderResults() {
 
     const qText = q.question; // Always English
 
-    const optKeys = Object.keys(q.options);
+    const optKeys = Object.keys(q.options).sort();
     const optionsReview = optKeys.map(key => {
       const optText = q.options[key]; // Always English
       let cls = '';
@@ -333,7 +333,7 @@ function renderResults() {
 
     // Vietnamese translation for review
     const viQ = q.questionVI && q.questionVI !== q.question ? q.questionVI : '';
-    const viOpts = Object.keys(q.optionsVI || {}).map(key => {
+    const viOpts = Object.keys(q.optionsVI || {}).sort().map(key => {
       const v = q.optionsVI[key];
       return v && v !== q.options[key] ? `<div style="padding:2px 0;">${key}. ${v}</div>` : '';
     }).filter(Boolean).join('');
@@ -731,7 +731,7 @@ function updateExamPartial() {
   // Update options
   const optionsList = document.querySelector('.options-list');
   if (optionsList) {
-    const optKeys = Object.keys(q.options);
+    const optKeys = Object.keys(q.options).sort();
     optionsList.innerHTML = optKeys.map(key => {
       const optText = formatCodeInText(q.options[key]);
       const isSelected = selectedAnswers.includes(key);
@@ -755,7 +755,7 @@ function updateExamPartial() {
 
   if (isHintShown || isPracticeRevealed) {
     const viQuestion = q.questionVI && q.questionVI !== q.question ? formatCodeInText(q.questionVI) : '';
-    const viOptions = Object.keys(q.optionsVI || {}).map(key => {
+    const viOptions = Object.keys(q.optionsVI || {}).sort().map(key => {
       const viOpt = q.optionsVI[key];
       return (viOpt && viOpt !== q.options[key]) ? `<div style="padding:4px 0;">${key}. ${formatCodeInText(viOpt)}</div>` : '';
     }).filter(Boolean).join('');
