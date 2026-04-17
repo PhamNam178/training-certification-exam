@@ -3,7 +3,7 @@
 // Gợi ý từ chuyên gia AI (1 chiều, không chat)
 // ============================================
 
-const AI_ENDPOINT = '/api/ai/models/gemini-flash-latest:streamGenerateContent?alt=sse';
+const isDev = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
 
 /**
  * Mở popup AI Expert và stream câu trả lời realtime
@@ -41,17 +41,27 @@ export async function openAIExpertPopup(question) {
       tipIndex++;
     }, 1500);
     
-    const response = await fetch(AI_ENDPOINT, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        contents: [{ parts: [{ text: prompt }] }],
-        generationConfig: {
-          temperature: 0.7,
-          maxOutputTokens: 2048
-        }
-      })
-    });
+    // Dev: dùng Vite proxy → Gemini trực tiếp
+    // Production: dùng Vercel Edge Function /api/gemini
+    const requestBody = {
+      contents: [{ parts: [{ text: prompt }] }],
+      generationConfig: { temperature: 0.7, maxOutputTokens: 2048 }
+    };
+
+    let response;
+    if (isDev) {
+      response = await fetch('/api/ai/models/gemini-flash-latest:streamGenerateContent?alt=sse', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(requestBody)
+      });
+    } else {
+      response = await fetch('/api/gemini', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ model: 'gemini-flash-latest', stream: true, ...requestBody })
+      });
+    }
 
     if (!response.ok) {
       const errText = await response.text();
