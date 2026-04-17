@@ -167,7 +167,7 @@ function renderExam() {
   // Build options
   const optKeys = Object.keys(q.options);
   const optionsHTML = optKeys.map(key => {
-    const optText = q.options[key]; // Always English
+    const optText = formatCodeInText(q.options[key]); // Always English
     const isSelected = selectedAnswers.includes(key);
     
     let optClass = isSelected ? 'selected' : '';
@@ -200,11 +200,11 @@ function renderExam() {
   let explanationHTML = '';
   if (isHintShown || isPracticeRevealed) {
     // Build Vietnamese translation section
-    const viQuestion = q.questionVI && q.questionVI !== q.question ? q.questionVI : '';
+    const viQuestion = q.questionVI && q.questionVI !== q.question ? formatCodeInText(q.questionVI) : '';
     const viOptions = Object.keys(q.optionsVI || {}).map(key => {
       const viOpt = q.optionsVI[key];
       if (viOpt && viOpt !== q.options[key]) {
-        return `<div style="padding:4px 0;">${key}. ${viOpt}</div>`;
+        return `<div style="padding:4px 0;">${key}. ${formatCodeInText(viOpt)}</div>`;
       }
       return '';
     }).filter(Boolean).join('');
@@ -220,11 +220,11 @@ function renderExam() {
       `;
     }
 
-    const expText = cleanExplanation(q.explanation);
+    const expText = formatCodeInText(cleanExplanation(q.explanation));
     
     // Correct answer in English
     const correctArr = q.correct.split(',').map(s => s.trim());
-    const correctAnswerText = correctArr.map(key => `<div style="padding:3px 0;"><strong style="color:var(--sf-success);">${key}.</strong> ${q.options[key] || ''}</div>`).join('');
+    const correctAnswerText = correctArr.map(key => `<div style="padding:3px 0;"><strong style="color:var(--sf-success);">${key}.</strong> ${formatCodeInText(q.options[key] || '')}</div>`).join('');
     const correctAnswerHTML = `
       <div style="margin-bottom:12px;padding:12px 16px;background:rgba(46,132,74,0.06);border-radius:8px;border:1px solid rgba(46,132,74,0.2);">
         <div style="font-size:13px;font-weight:600;color:var(--sf-success);margin-bottom:6px;">✅ Correct Answer:</div>
@@ -589,16 +589,41 @@ function cleanExplanation(text) {
 function formatCodeInText(text) {
   if (!text) return '';
   
-  // Detect code patterns
-  if (text.includes('List<') || text.includes('Map<') || text.includes('Set<') || 
-      text.includes('[SELECT') || text.includes('for(') || text.includes('for (') || 
-      text.match(/\{[^}]*\}/)) {
+  let processed = text;
+
+  // 1. Nếu có Markdown code block (```)
+  if (processed.includes('```')) {
+    const codeBlocks = [];
+    processed = processed.replace(/```([^\n]*)\n?([\s\S]*?)(?:```|$)/g, (match, lang, code) => {
+      const placeholder = `__CODE_BLOCK_${codeBlocks.length}__`;
+      const langLabel = lang.trim() ? `<span class="app-code-lang">${lang.trim()}</span>` : '';
+      codeBlocks.push(`<div class="app-code-block">${langLabel}<pre><code>${code.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</code></pre></div>`);
+      return placeholder;
+    });
+
+    processed = processed.replace(/`([^`]+)`/g, '<code class="app-inline-code">$1</code>');
+
+    codeBlocks.forEach((block, i) => {
+      processed = processed.replace(`__CODE_BLOCK_${i}__`, block);
+    });
     
-    // Find the last '?' which separates question from code
-    const lastQ = text.lastIndexOf('?');
-    if (lastQ !== -1 && lastQ < text.length - 5) {
-      const intro = text.substring(0, lastQ + 1);
-      let codePart = text.substring(lastQ + 1).trim();
+    return processed.replace(/\n\n/g, '<br><br>');
+  }
+
+  // 2. Inline code markdown tick: `code`
+  if (processed.includes('`')) {
+    processed = processed.replace(/`([^`]+)`/g, '<code class="app-inline-code">$1</code>');
+  }
+
+  // 3. Fallback: Auto-detect code patterns if no markdown is found
+  if (processed.includes('List<') || processed.includes('Map<') || processed.includes('Set<') || 
+      processed.includes('[SELECT') || processed.includes('for(') || processed.includes('for (') || 
+      processed.match(/\{[^}]*\}/)) {
+    
+    const lastQ = processed.lastIndexOf('?');
+    if (lastQ !== -1 && lastQ < processed.length - 5) {
+      const intro = processed.substring(0, lastQ + 1);
+      let codePart = processed.substring(lastQ + 1).trim();
       
       if (codePart.length > 20) {
         // Format code
@@ -607,12 +632,12 @@ function formatCodeInText(text) {
         codePart = codePart.replace(/\s*\}/g, '\n}');
         codePart = codePart.replace(/\n\s*\n/g, '\n');
         
-        return `${intro}<pre>${escapeHtml(codePart.trim())}</pre>`;
+        return `${intro}<div class="app-code-block"><pre><code>${escapeHtml(codePart.trim())}</code></pre></div>`;
       }
     }
   }
   
-  return text;
+  return processed;
 }
 
 function escapeHtml(str) {
@@ -708,7 +733,7 @@ function updateExamPartial() {
   if (optionsList) {
     const optKeys = Object.keys(q.options);
     optionsList.innerHTML = optKeys.map(key => {
-      const optText = q.options[key];
+      const optText = formatCodeInText(q.options[key]);
       const isSelected = selectedAnswers.includes(key);
       let optClass = isSelected ? 'selected' : '';
       let markerContent = key;
@@ -729,10 +754,10 @@ function updateExamPartial() {
   if (oldExp) oldExp.remove();
 
   if (isHintShown || isPracticeRevealed) {
-    const viQuestion = q.questionVI && q.questionVI !== q.question ? q.questionVI : '';
+    const viQuestion = q.questionVI && q.questionVI !== q.question ? formatCodeInText(q.questionVI) : '';
     const viOptions = Object.keys(q.optionsVI || {}).map(key => {
       const viOpt = q.optionsVI[key];
-      return (viOpt && viOpt !== q.options[key]) ? `<div style="padding:4px 0;">${key}. ${viOpt}</div>` : '';
+      return (viOpt && viOpt !== q.options[key]) ? `<div style="padding:4px 0;">${key}. ${formatCodeInText(viOpt)}</div>` : '';
     }).filter(Boolean).join('');
 
     let viTranslation = '';
@@ -745,13 +770,13 @@ function updateExamPartial() {
     }
 
     const correctArr = q.correct.split(',').map(s => s.trim());
-    const correctAnswerText = correctArr.map(key => `<div style="padding:3px 0;"><strong style="color:var(--sf-success);">${key}.</strong> ${q.options[key] || ''}</div>`).join('');
+    const correctAnswerText = correctArr.map(key => `<div style="padding:3px 0;"><strong style="color:var(--sf-success);">${key}.</strong> ${formatCodeInText(q.options[key] || '')}</div>`).join('');
     const correctAnswerHTML = `<div style="margin-bottom:12px;padding:12px 16px;background:rgba(46,132,74,0.06);border-radius:8px;border:1px solid rgba(46,132,74,0.2);">
       <div style="font-size:13px;font-weight:600;color:var(--sf-success);margin-bottom:6px;">✅ Correct Answer:</div>
       <div style="font-size:13px;color:var(--gray-700);">${correctAnswerText}</div>
     </div>`;
 
-    const expText = cleanExplanation(q.explanation);
+    const expText = formatCodeInText(cleanExplanation(q.explanation));
     const expDiv = document.createElement('div');
     expDiv.className = 'explanation-box fade-in';
     expDiv.innerHTML = `${correctAnswerHTML}${viTranslation}${expText ? `<h4>💡 Giải thích</h4><p>${expText}</p>` : ''}`;
