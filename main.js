@@ -678,15 +678,17 @@ window.startExam = function() {
   const data = state.certData;
   let questions = [...data.questions];
   
-  // Shuffle
-  questions = questions.sort(() => Math.random() - 0.5);
-  
+  // Shuffle only for demo and full mode; practice keeps original order
+  if (state.mode !== 'practice') {
+    questions = questions.sort(() => Math.random() - 0.5);
+  }
+
   if (state.mode === 'demo') {
     questions = questions.slice(0, 5);
   } else if (state.mode === 'full') {
     questions = questions.slice(0, data.examSize || 65);
   }
-  // practice = all questions
+  // practice = all questions, original order
 
   state.questions = questions;
   state.currentIndex = 0;
