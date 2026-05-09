@@ -4,11 +4,12 @@
 // ============================================
 import { createClient } from '@supabase/supabase-js';
 
-const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
-const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
+// Hardcoded fallbacks for Production (Vercel)
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || 'https://ppfnxxuphwukbaguttmd.supabase.co';
+const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBwZm54eHVwaHd1a2JhZ3V0dG1kIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyODE5MzYsImV4cCI6MjA5Mzg1NzkzNn0.CN-oveqtFRnozHUzWPkXmBjfcafsu-EwpwVFXNw7V6Q';
 
-if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
-  console.error('❌ Thiếu SUPABASE_URL hoặc SUPABASE_ANON_KEY trong .env');
+if (!import.meta.env.VITE_SUPABASE_URL) {
+  console.warn('⚠️ VITE_SUPABASE_URL not found in env, using fallback.');
 }
 
 export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
