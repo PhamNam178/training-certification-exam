@@ -19,11 +19,22 @@ export async function openAIExpertPopup(question) {
   const contentEl = document.getElementById('ai-expert-content');
   const statusEl = document.getElementById('ai-expert-status');
   
-  // Dùng nội dung câu hỏi làm key cache
-  const cacheKey = question.question.trim();
+  // Dùng nội dung câu hỏi làm key cache (hỗ trợ cả snake_case và camelCase)
+  const qText = question.question_en || question.question || '';
+  const cacheKey = qText.trim();
   
-  if (aiResponseCache[cacheKey]) {
-    // Nếu đã có cache, hiển thị luôn không cần gọi API
+  // ✅ Ưu tiên 1: Dùng ai_expert đã có sẵn trong data (pd1_enriched.json)
+  if (question.ai_expert) {
+    statusEl.textContent = '✅ Phân tích hoàn tất (Từ chuyên gia)';
+    statusEl.className = 'ai-expert__status done';
+    contentEl.innerHTML = formatAIResponse(question.ai_expert);
+    // Lưu vào cache để đồng nhất
+    if (cacheKey) aiResponseCache[cacheKey] = question.ai_expert;
+    return;
+  }
+
+  if (cacheKey && aiResponseCache[cacheKey]) {
+    // Nếu đã có cache từ lần gọi API trước
     statusEl.textContent = '✅ Phân tích hoàn tất (Tải từ bộ nhớ tạm)';
     statusEl.className = 'ai-expert__status done';
     contentEl.innerHTML = formatAIResponse(aiResponseCache[cacheKey]);
@@ -162,7 +173,7 @@ function buildPrompt(q) {
   return `Bạn là chuyên gia Salesforce với 10 năm kinh nghiệm. Hãy phân tích câu hỏi thi chứng chỉ Salesforce dưới đây và trả lời CHÍNH XÁC theo format bên dưới. Trả lời bằng tiếng Việt, giữ nguyên thuật ngữ kỹ thuật bằng tiếng Anh.
 
 **CÂU HỎI (English):**
-${q.question}
+${q.question_en || q.question}
 
 **CÁC ĐÁP ÁN:**
 ${optionsText}

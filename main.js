@@ -1,17 +1,16 @@
 // ============================================
-// SALESFORCE EXAM PRACTICE - MAIN APP
-// Connected to Salesforce Database via REST API
+// SUSHI LUYỆN ĐỀ THI - MAIN APP
+// Connected to Supabase (Auth + Database)
 // ============================================
-import { onAuthChange, loginWithGoogle, logout, getCurrentUser, getUserProfile, saveUserProfile, saveScore, getAllLeaderboard } from './firebase.js';
-import { loadCertFromSalesforce } from './salesforce-api.js';
+import { onAuthChange, loginWithGoogle, logout, getCurrentUser, getUserProfile, saveUserProfile, saveScore, getAllLeaderboard, loadQuestions } from './supabase.js';
 import { openAIExpertPopup } from './ai-expert.js';
 
 let state = {
   screen: 'home',       // home | login | mode | exam | results | leaderboard
   lang: 'vi',           // vi | en
-  certData: null,       // loaded from Salesforce DB or fallback JSON
+  certData: null,       // loaded from Supabase DB or fallback JSON
   certId: 'pd1',
-  dataSource: 'loading', // 'salesforce' | 'json' | 'loading'
+  dataSource: 'loading', // 'supabase' | 'json' | 'loading'
   mode: null,            // demo | full | practice
   questions: [],         // current exam questions
   currentIndex: 0,
@@ -21,29 +20,36 @@ let state = {
   timerStart: 0,         // timestamp when exam started
   submitted: false,
   // Auth
-  user: null,            // Firebase user
-  userProfile: null,     // { username, ... } from Firestore
+  user: null,            // Supabase user
+  userProfile: null,     // { username, ... } from profiles table
   authLoading: true,
   showUsernamePopup: false
 };
 
 const app = document.getElementById('app');
 
-// ========== DATA (Salesforce Database → Fallback JSON) ==========
+// ========== DATA (Supabase Database → Fallback JSON) ==========
 async function loadCert(certId) {
-  // Ưu tiên 1: Lấy data trực tiếp từ Salesforce Database qua REST API
-  const sfData = await loadCertFromSalesforce(certId);
-  if (sfData && sfData.questions && sfData.questions.length > 0) {
-    state.certData = sfData;
-    state.dataSource = 'salesforce';
-    console.log(`🔗 Data source: SALESFORCE DATABASE (${sfData.totalQuestions} questions)`);
-    return state.certData;
+  try {
+    // Ưu tiên 1: Lấy data từ Supabase Database
+    const sbData = await loadQuestions(certId);
+    if (sbData && sbData.questions && sbData.questions.length > 0) {
+      state.certData = sbData;
+      state.dataSource = 'supabase';
+      console.log(`🔗 Data source: SUPABASE DATABASE (${sbData.totalQuestions} questions)`);
+      return state.certData;
+    }
+  } catch (err) {
+    console.warn('⚠️ Supabase unavailable, falling back to JSON:', err.message);
   }
 
-  // Ưu tiên 2: Fallback về file JSON tĩnh nếu API không khả dụng
+  // Ưu tiên 2: Fallback về file JSON tĩnh (pd1_enriched.json)
   console.log('📁 Data source: LOCAL JSON (fallback)');
-  const res = await fetch(`/data/${certId}.json`);
-  state.certData = await res.json();
+  const res = await fetch(`/data/${certId}_enriched.json`);
+  const rawData = await res.json();
+  state.certData = Array.isArray(rawData)
+    ? { questions: rawData, totalQuestions: rawData.length }
+    : rawData;
   state.dataSource = 'json';
   return state.certData;
 }
@@ -68,8 +74,8 @@ function renderHome() {
     <section class="hero">
       <div class="hero__content fade-in">
         <div class="hero__badge">✨ Miễn phí 100% • ${state.user ? `Xin chào, ${state.userProfile?.username || 'User'}!` : 'Đăng nhập để lưu điểm'}</div>
-        ${state.dataSource === 'salesforce' 
-          ? '<div style="display:inline-block;background:linear-gradient(135deg,#04844b,#0b8953);color:#fff;padding:4px 14px;border-radius:20px;font-size:11px;font-weight:600;margin-bottom:8px;letter-spacing:0.5px;">🔗 Live Database — Salesforce Connected</div>'
+        ${state.dataSource === 'supabase' 
+          ? '<div style="display:inline-block;background:linear-gradient(135deg,#3ecf8e,#2b9f6f);color:#fff;padding:4px 14px;border-radius:20px;font-size:11px;font-weight:600;margin-bottom:8px;letter-spacing:0.5px;">🔗 Live Database — Supabase Connected</div>'
           : state.dataSource === 'json' 
             ? '<div style="display:inline-block;background:#ff6600;color:#fff;padding:4px 14px;border-radius:20px;font-size:11px;font-weight:600;margin-bottom:8px;">📁 Offline Mode — Static JSON</div>'
             : ''}
@@ -144,7 +150,7 @@ function renderModeSelect() {
 
 function renderExam() {
   const q = state.questions[state.currentIndex];
-  const questionText = q.question; // Always English
+  const questionText = q.question_en || q.question; // snake_case (enriched) | camelCase (legacy)
   const total = state.questions.length;
   const progress = ((state.currentIndex + 1) / total) * 100;
   const selectedAnswers = state.answers[state.currentIndex] || [];
@@ -162,7 +168,7 @@ function renderExam() {
   }
 
   // Multi-select hint
-  const multiHint = q.isMulti ? `<div class="multi-hint">✎ Select multiple answers</div>` : '';
+  const multiHint = (q.is_multi || q.isMulti) ? `<div class="multi-hint">✎ Select multiple answers</div>` : '';
 
   // Build options
   const optKeys = Object.keys(q.options).sort();
@@ -200,9 +206,12 @@ function renderExam() {
   let explanationHTML = '';
   if (isHintShown || isPracticeRevealed) {
     // Build Vietnamese translation section
-    const viQuestion = q.questionVI && q.questionVI !== q.question ? formatCodeInText(q.questionVI) : '';
-    const viOptions = Object.keys(q.optionsVI || {}).sort().map(key => {
-      const viOpt = q.optionsVI[key];
+    const _qVI = q.question_vi || q.questionVI;
+    const _qEN = q.question_en || q.question;
+    const viQuestion = _qVI && _qVI !== _qEN ? formatCodeInText(_qVI) : '';
+    const _optsVI = q.options_vi || q.optionsVI || {};
+    const viOptions = Object.keys(_optsVI).sort().map(key => {
+      const viOpt = _optsVI[key];
       if (viOpt && viOpt !== q.options[key]) {
         return `<div style="padding:4px 0;">${key}. ${formatCodeInText(viOpt)}</div>`;
       }
@@ -310,11 +319,12 @@ function renderResults() {
   
   const reviewHTML = state.questions.map((q, i) => {
     const selected = state.answers[i] || [];
-    const correctArr = q.correct.split(',').map(s => s.trim());
+    const _correct = q.correct_verified || q.correct;
+    const correctArr = _correct.split(',').map(s => s.trim());
     const isCorrect = selected.length === correctArr.length && selected.every(a => correctArr.includes(a));
     if (isCorrect) correct++;
 
-    const qText = q.question; // Always English
+    const qText = q.question_en || q.question; // snake_case (enriched) | camelCase (legacy)
 
     const optKeys = Object.keys(q.options).sort();
     const optionsReview = optKeys.map(key => {
@@ -332,9 +342,12 @@ function renderResults() {
     }).join('');
 
     // Vietnamese translation for review
-    const viQ = q.questionVI && q.questionVI !== q.question ? q.questionVI : '';
-    const viOpts = Object.keys(q.optionsVI || {}).sort().map(key => {
-      const v = q.optionsVI[key];
+    const _qqVI = q.question_vi || q.questionVI;
+    const _qqEN = q.question_en || q.question;
+    const viQ = _qqVI && _qqVI !== _qqEN ? _qqVI : '';
+    const _ooVI = q.options_vi || q.optionsVI || {};
+    const viOpts = Object.keys(_ooVI).sort().map(key => {
+      const v = _ooVI[key];
       return v && v !== q.options[key] ? `<div style="padding:2px 0;">${key}. ${v}</div>` : '';
     }).filter(Boolean).join('');
 
@@ -756,9 +769,12 @@ function updateExamPartial() {
   if (oldExp) oldExp.remove();
 
   if (isHintShown || isPracticeRevealed) {
-    const viQuestion = q.questionVI && q.questionVI !== q.question ? formatCodeInText(q.questionVI) : '';
-    const viOptions = Object.keys(q.optionsVI || {}).sort().map(key => {
-      const viOpt = q.optionsVI[key];
+    const _vqVI = q.question_vi || q.questionVI;
+    const _vqEN = q.question_en || q.question;
+    const viQuestion = _vqVI && _vqVI !== _vqEN ? formatCodeInText(_vqVI) : '';
+    const _vOptsVI = q.options_vi || q.optionsVI || {};
+    const viOptions = Object.keys(_vOptsVI).sort().map(key => {
+      const viOpt = _vOptsVI[key];
       return (viOpt && viOpt !== q.options[key]) ? `<div style="padding:4px 0;">${key}. ${formatCodeInText(viOpt)}</div>` : '';
     }).filter(Boolean).join('');
 
@@ -771,7 +787,8 @@ function updateExamPartial() {
       </div>`;
     }
 
-    const correctArr = q.correct.split(',').map(s => s.trim());
+    const _correct = q.correct_verified || q.correct;
+    const correctArr = _correct.split(',').map(s => s.trim());
     const correctAnswerText = correctArr.map(key => `<div style="padding:3px 0;"><strong style="color:var(--sf-success);">${key}.</strong> ${formatCodeInText(q.options[key] || '')}</div>`).join('');
     const correctAnswerHTML = `<div style="margin-bottom:12px;padding:12px 16px;background:rgba(46,132,74,0.06);border-radius:8px;border:1px solid rgba(46,132,74,0.2);">
       <div style="font-size:13px;font-weight:600;color:var(--sf-success);margin-bottom:6px;">✅ Correct Answer:</div>
@@ -816,7 +833,7 @@ window.selectOption = function(key) {
   const q = state.questions[state.currentIndex];
   let current = state.answers[state.currentIndex] || [];
 
-  if (q.isMulti) {
+  if (q.is_multi || q.isMulti) {
     if (current.includes(key)) {
       current = current.filter(k => k !== key);
     } else {
