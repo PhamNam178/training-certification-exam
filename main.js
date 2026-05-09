@@ -560,7 +560,7 @@ function buildLeaderboardTable(certFilter) {
   const rows = scores.map((s, i) => {
     const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `${i + 1}`;
     const timeMin = s.timeUsed ? Math.round(s.timeUsed / 60) : '-';
-    const isMe = state.user && s.uid === state.user.uid;
+    const isMe = state.user && s.user_id === state.user.id;
     const highlight = isMe ? 'background:rgba(1,118,211,0.06);font-weight:600;' : '';
     return `<tr style="${highlight}">
       <td style="padding:10px 12px;font-size:16px;">${medal}</td>
@@ -908,7 +908,7 @@ window.submitExam = async function() {
       const score = Math.round((correct / total) * 100);
       const timeUsed = Math.round((Date.now() - state.timerStart) / 1000);
       await saveScore({
-        uid: state.user.uid,
+        user_id: state.user.id,
         username: state.userProfile?.username || state.user.displayName || 'Anonymous',
         certName: state.certData?.certification || 'Unknown',
         mode: state.mode,
@@ -949,7 +949,7 @@ window.saveUsername = async function() {
   const username = input?.value?.trim();
   if (!username) { input?.focus(); return; }
   try {
-    await saveUserProfile(state.user.uid, { username });
+    await saveUserProfile(state.user.id, { username });
     state.userProfile = { ...state.userProfile, username };
     state.showUsernamePopup = false;
     document.getElementById('username-popup')?.remove();
@@ -981,7 +981,7 @@ onAuthChange(async (user) => {
   state.authLoading = false;
   state.user = user;
   if (user) {
-    const profile = await getUserProfile(user.uid);
+    const profile = await getUserProfile(user.id);
     state.userProfile = profile;
     // First time login: show username popup
     if (!profile || !profile.username) {
